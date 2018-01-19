@@ -61,7 +61,7 @@ class Model(object):
                 lstm_fw_cell, lstm_bw_cell, x,
                 sequence_length=[FRAMES_PER_SAMPLE] * self.batch_size,
                 dtype=tf.float32)
-            state_concate = tf.concat(2, outputs)
+            state_concate = tf.concat(outputs, 2)
         with tf.variable_scope('BLSTM2') as scope:
             # lstm_fw_cell2 = tf.nn.rnn_cell.LSTMCell(
             #     self.n_hidden)
@@ -83,7 +83,7 @@ class Model(object):
                 lstm_fw_cell2, lstm_bw_cell2, state_concate,
                 sequence_length=[FRAMES_PER_SAMPLE] * self.batch_size,
                 dtype=tf.float32)
-            state_concate2 = tf.concat(2, outputs2)
+            state_concate2 = tf.concat(outputs2, 2)
         with tf.variable_scope('BLSTM3') as scope:
             lstm_fw_cell3 = tf.contrib.rnn.LayerNormBasicLSTMCell(
                 self.n_hidden, layer_norm=False,
@@ -101,7 +101,7 @@ class Model(object):
                 lstm_fw_cell3, lstm_bw_cell3, state_concate2,
                 sequence_length=[FRAMES_PER_SAMPLE] * self.batch_size,
                 dtype=tf.float32)
-            state_concate3 = tf.concat(2, outputs3)
+            state_concate3 = tf.concat(outputs3, 2)
         with tf.variable_scope('BLSTM4') as scope:
             lstm_fw_cell4 = tf.contrib.rnn.LayerNormBasicLSTMCell(
                 self.n_hidden, layer_norm=False,
@@ -119,7 +119,7 @@ class Model(object):
                 lstm_fw_cell4, lstm_bw_cell4, state_concate3,
                 sequence_length=[FRAMES_PER_SAMPLE] * self.batch_size,
                 dtype=tf.float32)
-            state_concate4 = tf.concat(2, outputs4)
+            state_concate4 = tf.concat(outputs4, 2)
         # one layer of embedding output with tanh activation function
         out_concate = tf.reshape(state_concate4, [-1, self.n_hidden * 2])
         emb_out = tf.matmul(out_concate,
