@@ -19,8 +19,8 @@ from GlobalConstont import *
 
 
 # the .pkl file lists of data set
-pkl_list = ['../dcdata/' + str(i) + '.pkl' for i in range(1, 12)]
-val_list = ['../dcdata/val.pkl']
+pkl_list = ['/Users/JAKE/Documents/deep-clustering/' + str(i) + '.pkl' for i in range(1, 2)]
+val_list = ['/Users/JAKE/Documents/deep-clustering/val.pkl']
 sum_dir = 'sum'
 train_dir = 'train'
 
@@ -56,19 +56,19 @@ def train():
         loss = BiModel.loss(embedding, Y_data_reshaped, VAD_data_reshaped)
         # get the train operation
         train_op = BiModel.train(loss, lr)
-        saver = tf.train.Saver(tf.all_variables())
-        summary_op = tf.merge_all_summaries()
+        saver = tf.train.Saver(tf.global_variables())
+        summary_op = tf.summary.merge_all()
         sess = tf.Session()
 
         # either train from scratch or a trained model
         # saver.restore(sess, 'train/model.ckpt-492000')
         # val_loss = np.fromfile('val_loss').tolist()
         # init_step = 56001
-        init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
         sess.run(init)
         init_step = 0
 
-        summary_writer = tf.train.SummaryWriter(
+        summary_writer = tf.summary.FileWriter(
             sum_dir, sess.graph)
         # val_loss = []
 

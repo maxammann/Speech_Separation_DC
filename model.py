@@ -136,26 +136,26 @@ class Model(object):
         VAD_rs = tf.reshape(VAD, shape=[-1])
         # get the embeddings with active VAD
         embeddings_rsv = tf.transpose(
-            tf.mul(tf.transpose(embeddings_rs), VAD_rs))
+            tf.multiply(tf.transpose(embeddings_rs), VAD_rs))
         embeddings_v = tf.reshape(
             embeddings_rsv, [-1, FRAMES_PER_SAMPLE * NEFF, EMBBEDDING_D])
         # get the Y(speaker indicator function) with active VAD
         Y_rs = tf.reshape(Y, shape=[-1, 2])
         Y_rsv = tf.transpose(
-            tf.mul(tf.transpose(Y_rs), VAD_rs))
+            tf.multiply(tf.transpose(Y_rs), VAD_rs))
         Y_v = tf.reshape(Y_rsv, shape=[-1, FRAMES_PER_SAMPLE * NEFF, 2])
         # fast computation format of the embedding loss function
         loss_batch = tf.nn.l2_loss(
-            tf.batch_matmul(tf.transpose(
+            tf.matmul(tf.transpose(
                 embeddings_v, [0, 2, 1]), embeddings_v)) - \
             2 * tf.nn.l2_loss(
-                tf.batch_matmul(tf.transpose(
+                tf.matmul(tf.transpose(
                     embeddings_v, [0, 2, 1]), Y_v)) + \
             tf.nn.l2_loss(
-                tf.batch_matmul(tf.transpose(
+                tf.matmul(tf.transpose(
                     Y_v, [0, 2, 1]), Y_v))
         loss_v = (loss_batch) / self.batch_size
-        tf.scalar_summary('loss', loss_v)
+        tf.summary.scalar('loss', loss_v)
         return loss_v
 
     def train(self, loss, lr):
