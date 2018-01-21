@@ -70,7 +70,7 @@ def train():
 
         summary_writer = tf.summary.FileWriter(
             sum_dir, sess.graph)
-        # val_loss = []
+        val_loss = []
 
         last_epoch = data_generator.epoch
 
