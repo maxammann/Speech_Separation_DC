@@ -161,7 +161,7 @@ class DataGenerator(object):
 
 
 if __name__ == '__main__':
-    data_dir = '/media/nca/data/raw_data/speech_train_rs/'
+    data_dir = '/Users/JAKE/Documents/deep-clustering/speakers_test/'
     # data_dir = 'speech/'
     gen = DataGenerator(data_dir, 64)
     gen.reinit()
