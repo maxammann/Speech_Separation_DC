@@ -12,6 +12,8 @@ import matplotlib as mpl
 mpl.use('agg')
 from matplotlib import pyplot as plt
 from GlobalConstont import *
+import argparse
+import glob
 
 
 def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
@@ -48,8 +50,8 @@ class DataGenerator(object):
 
         # get the files in each speakers dir
         for i in range(self.n_speaker):
-            wav_dir_i = [os.path.join(self.speakers_dir[i], file)
-                         for file in os.listdir(self.speakers_dir[i])]
+            wav_dir_i = [os.path.join(self.speakers_dir[i], file) \
+              for file in os.listdir(self.speakers_dir[i]) if file[-3:]=="wav"]
             for j in wav_dir_i:
                 if i not in self.speaker_file:
                     self.speaker_file[i] = []
@@ -165,8 +167,9 @@ class DataGenerator(object):
 
 
 if __name__ == '__main__':
-#    data_dir = '/Users/JAKE/Documents/deep-clustering/speakers_test/'
-    data_dir='/Users/JAKE/Documents/deep-clustering/test'
-    # data_dir = 'speech/'
-    gen = DataGenerator(data_dir, 64)
+    parser = argparse.ArgumentParser("The function is to pack the audio files")
+    parser.add_argument("-d", "--dir", type=str, help="root directory which \
+                        contains the fold of audio files from each speaker")
+    args = parser.parse_args()
+    gen = DataGenerator(args.dir, 64)
     gen.reinit(snr=0.1)
