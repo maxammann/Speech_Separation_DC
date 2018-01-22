@@ -69,6 +69,10 @@ class DataGenerator(object):
     def reinit(self, snr=0.1):
         '''Init the training data using the wav files'''
         self.speaker_file_match = {}
+        ## training datasets
+        self.samples = []
+        ## the begining index of a batch
+        self.ind = 0
         # generate match dict
         for i in range(self.n_speaker):
             for j in self.speaker_file[i]:
@@ -80,8 +84,6 @@ class DataGenerator(object):
                 l = np.random.randint(len(self.speaker_file[k]))
                 self.speaker_file_match[j] = self.speaker_file[k][l]
 
-        self.samples = []
-        self.ind = 0
         # for each file pair, generate their mixture and reference samples
         for i in self.speaker_file_match:
             j = self.speaker_file_match[i]
