@@ -22,7 +22,7 @@ def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
     # samples = np.append(np.zeros(np.floor(frameSize / 2.0)), sig)
     samples = np.array(sig, dtype='float64')
     # cols for windowing
-    cols = np.ceil((len(samples) - frameSize) / float(hopSize))
+    cols = int(np.ceil((len(samples) - frameSize) / float(hopSize)))
     # zeros at end (thus samples can be fully covered by frames)
     # samples = np.append(samples, np.zeros(frameSize))
     frames = stride_tricks.as_strided(
@@ -64,7 +64,9 @@ class DataGenerator(object):
                 data, sr = librosa.load(file, SAMPLING_RATE)
                 librosa.output.write_wav(file, data, SAMPLING_RATE)
 
-    def reinit(self):
+    ## mix two sounds
+    ## parameter snr controls the amplitude of the second speaker (noise level)
+    def reinit(self, snr=0.1):
         '''Init the training data using the wav files'''
         self.speaker_file_match = {}
         # generate match dict
@@ -93,7 +95,7 @@ class DataGenerator(object):
             # mix
             length = min(len(speech_1), len(speech_2))
             speech_1 = speech_1[:length]
-            speech_2 = speech_2[:length]
+            speech_2 = speech_2[:length] * snr
             speech_mix = speech_1 + speech_2
             # compute log spectrum for 1st speaker
             speech_1_spec = np.abs(stft(speech_1, FRAME_SIZE)[:, :NEFF])
@@ -144,7 +146,7 @@ class DataGenerator(object):
         self.tot_samp = len(self.samples)
         np.random.shuffle(self.samples)
 
-    def gen_batch(self):
+    def gen_batch(self, snr=0.1):
         '''Output a batch of training samples'''
         n_begin = self.ind
         n_end = self.ind + self.batch_size
@@ -155,13 +157,14 @@ class DataGenerator(object):
             n_end = self.ind + self.batch_size
             self.epoch += 1
             if self.epoch % 100 == 0:
-                self.reinit()
+                self.reinit(snr=snr)
         self.ind += self.batch_size
         return self.samples[n_begin:n_end]
 
 
 if __name__ == '__main__':
-    data_dir = '/Users/JAKE/Documents/deep-clustering/speakers_test/'
+#    data_dir = '/Users/JAKE/Documents/deep-clustering/speakers_test/'
+    data_dir='/Users/JAKE/Documents/deep-clustering/test'
     # data_dir = 'speech/'
     gen = DataGenerator(data_dir, 64)
-    gen.reinit()
+    gen.reinit(snr=0.1)
