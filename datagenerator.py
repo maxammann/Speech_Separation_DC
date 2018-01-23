@@ -36,7 +36,7 @@ def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
 
 
 class DataGenerator(object):
-    def __init__(self, data_dir, batch_size):
+    def __init__(self, snr, data_dir, output):
         '''preprocess the training data
         data_dir: dir containing the training data
                   format:root_dir + speaker_dir + wavfiles'''
@@ -44,9 +44,11 @@ class DataGenerator(object):
         self.speakers_dir = [os.path.join(data_dir, i)
                              for i in os.listdir(data_dir)]
         self.n_speaker = len(self.speakers_dir)
-        self.batch_size = batch_size
         self.speaker_file = {}
         self.epoch = 0
+        # noise level
+        self.snr = snr
+        self.output = output
 
         # get the files in each speakers dir
         for i in range(self.n_speaker):
@@ -68,7 +70,7 @@ class DataGenerator(object):
 
     ## mix two sounds
     ## parameter snr controls the amplitude of the second speaker (noise level)
-    def reinit(self, snr=0.1):
+    def reinit(self):
         '''Init the training data using the wav files'''
         self.speaker_file_match = {}
         ## training datasets
@@ -99,7 +101,7 @@ class DataGenerator(object):
             # mix
             length = min(len(speech_1), len(speech_2))
             speech_1 = speech_1[:length]
-            speech_2 = speech_2[:length] * snr
+            speech_2 = speech_2[:length] * self.snr
             speech_mix = speech_1 + speech_2
             # compute log spectrum for 1st speaker
             speech_1_spec = np.abs(stft(speech_1, FRAME_SIZE)[:, :NEFF])
@@ -146,30 +148,17 @@ class DataGenerator(object):
                 self.samples.append(sample_dict)
                 k = k + FRAMES_PER_SAMPLE
         # dump the generated sample list
-        cPickle.dump(self.samples, open('val.pkl', 'wb'))
+        cPickle.dump(self.samples, open(self.output, 'wb'))
         self.tot_samp = len(self.samples)
         np.random.shuffle(self.samples)
-
-    def gen_batch(self, snr=0.1):
-        '''Output a batch of training samples'''
-        n_begin = self.ind
-        n_end = self.ind + self.batch_size
-        # ipdb.set_trace()
-        if n_end >= self.tot_samp:
-            self.ind = 0
-            n_begin = self.ind
-            n_end = self.ind + self.batch_size
-            self.epoch += 1
-            if self.epoch % 100 == 0:
-                self.reinit(snr=snr)
-        self.ind += self.batch_size
-        return self.samples[n_begin:n_end]
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("The function is to pack the audio files")
     parser.add_argument("-d", "--dir", type=str, help="root directory which \
                         contains the fold of audio files from each speaker")
+    parser.add_argument("-o", "--output", type=str, help="output file name")
+    parser.add_argument("-s", "--snr", type=float, help="noise level for the \
+                        training datasets")
     args = parser.parse_args()
-    gen = DataGenerator(args.dir, 64)
-    gen.reinit(snr=0.1)
+    gen = DataGenerator(snr=args.snr, data_dir=args.dir, output=args.output)
+    gen.reinit()
