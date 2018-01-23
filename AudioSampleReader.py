@@ -21,7 +21,7 @@ def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
     # samples = np.append(np.zeros(np.floor(frameSize / 2.0)), sig)
     samples = np.array(sig, dtype='float64')
     # cols for windowing
-    cols = np.ceil((len(samples) - frameSize) / float(hopSize)) + 1
+    cols = int(np.ceil((len(samples) - frameSize) / float(hopSize))) + 1
     # zeros at end (thus samples can be fully covered by frames)
     samples = np.append(samples, np.zeros(frameSize))
     frames = stride_tricks.as_strided(
