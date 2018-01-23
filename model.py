@@ -2,7 +2,6 @@
 Class Model: model for the deep clustering speech seperation
 '''
 import numpy as np
-import ipdb
 import tensorflow as tf
 
 from GlobalConstont import *

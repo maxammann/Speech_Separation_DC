@@ -11,7 +11,6 @@ import time
 
 import numpy as np
 import tensorflow as tf
-import ipdb
 from datagenerator2 import DataGenerator
 from model import Model
 
