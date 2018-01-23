@@ -27,7 +27,7 @@ train_dir = 'train'
 lr = 1e-3
 n_hidden = 300
 max_steps = 20000000
-batch_size = 8
+batch_size = 128
 
 
 def train():
