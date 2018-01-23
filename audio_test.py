@@ -15,7 +15,6 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import tensorflow as tf
-import ipdb
 import itertools
 from numpy.lib import stride_tricks
 import matplotlib as mpl
@@ -46,25 +45,6 @@ oracal_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] * 10
 # import ipdb; ipdb.set_trace()
 
 
-def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
-    """ short time fourier transform of audio signal """
-    win = window(frameSize)
-    hopSize = int(frameSize - np.floor(overlapFac * frameSize))
-    # zeros at beginning (thus center of 1st window should be for sample nr. 0)
-    # samples = np.append(np.zeros(np.floor(frameSize / 2.0)), sig)
-    samples = np.array(sig, dtype='float64')
-    # cols for windowing
-    cols = np.ceil((len(samples) - frameSize) / float(hopSize)) + 1
-    # zeros at end (thus samples can be fully covered by frames)
-    samples = np.append(samples, np.zeros(frameSize))
-    frames = stride_tricks.as_strided(
-        samples,
-        shape=(cols, frameSize),
-        strides=(samples.strides[0] * hopSize, samples.strides[0])).copy()
-    frames *= win
-    return np.fft.rfft(frames)
-
-
 def out_put(N_frame):
     '''Use trained model to infer N _frame chuncks of
     frames of input audio'''
@@ -85,7 +65,7 @@ def out_put(N_frame):
         saver = tf.train.Saver(tf.all_variables())
         sess = tf.Session()
         # restore the model
-        saver.restore(sess, 'train/model.ckpt-492000')
+        saver.restore(sess, 'train/model.ckpt-4000')
         tot_frame = N_frame * FRAMES_PER_SAMPLE
         # arrays to store output waveform
         out_audio1 = np.zeros([(tot_frame - 1) * hop_size + FRAME_SIZE])
