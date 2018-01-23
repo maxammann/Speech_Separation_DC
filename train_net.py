@@ -27,7 +27,7 @@ train_dir = 'train'
 lr = 1e-3
 n_hidden = 300
 max_steps = 20000000
-batch_size = 128
+batch_size = 8
 
 
 def train():
@@ -114,10 +114,10 @@ def train():
                 print (format_str % (datetime.now(), step, loss_value,
                                      examples_per_sec, sec_per_batch,
                                      data_generator.epoch))
-            if step % 4000 == 0:
+            if step % 500 == 0:
                 # save model every 4000 steps
                 checkpoint_path = os.path.join(train_dir, 'model.ckpt')
-                saver.save(sess, checkpoint_path, global_step=step)
+                saver.save(sess, checkpoint_path)
 
             if last_epoch != data_generator.epoch:
                 # doing validation every training epoch
