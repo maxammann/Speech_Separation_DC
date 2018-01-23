@@ -17,10 +17,11 @@ from model import Model
 
 from GlobalConstont import *
 
-
-# the .pkl file lists of data set
-pkl_list = ['/Users/JAKE/Documents/deep-clustering/' + str(i) + '.pkl' for i in range(1, 2)]
-val_list = ['/Users/JAKE/Documents/deep-clustering/val.pkl']
+## assume the data is in the root directory
+## the .pkl file lists of datasets as the training data
+pkl_list = ['train.pkl']
+## validation data
+val_list = ['val.pkl']
 sum_dir = 'sum'
 train_dir = 'train'
 
@@ -156,6 +157,6 @@ def train():
 
             last_epoch = data_generator.epoch
 
-
-print('%s start' % datetime.now())
-train()
+if __name__ == "__main__":
+    print('%s start' % datetime.now())
+    train()

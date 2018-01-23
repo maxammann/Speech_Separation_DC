@@ -7,7 +7,6 @@ import numpy as np
 import librosa
 import cPickle
 from numpy.lib import stride_tricks
-import ipdb
 import os
 import matplotlib as mpl
 mpl.use('agg')
