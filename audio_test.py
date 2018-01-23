@@ -65,7 +65,7 @@ def out_put(N_frame):
         saver = tf.train.Saver(tf.all_variables())
         sess = tf.Session()
         # restore the model
-        saver.restore(sess, 'train/model.ckpt-4000')
+        saver.restore(sess, 'train/model.ckpt')
         tot_frame = N_frame * FRAMES_PER_SAMPLE
         # arrays to store output waveform
         out_audio1 = np.zeros([(tot_frame - 1) * hop_size + FRAME_SIZE])
