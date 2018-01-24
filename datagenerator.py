@@ -35,18 +35,16 @@ def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
 
 
 class DataGenerator(object):
-    def __init__(self, snr, data_dir, output):
+    def __init__(self, data_dir, output):
         '''preprocess the training data
         data_dir: dir containing the training data
                   format:root_dir + speaker_dir + wavfiles'''
         # get dirs for each speaker
-        self.speakers_dir = [os.path.join(data_dir, i)
-                             for i in os.listdir(data_dir)]
+        self.speakers_dir = [os.path.join(data_dir, i) for i in os.listdir(data_dir)\
+                             if os.path.isdir(os.path.join(data_dir, i))]
         self.n_speaker = len(self.speakers_dir)
         self.speaker_file = {}
         self.epoch = 0
-        # noise level
-        self.snr = snr
         self.output = output
 
         # get the files in each speakers dir
@@ -67,8 +65,6 @@ class DataGenerator(object):
                 data, sr = librosa.load(file, SAMPLING_RATE)
                 librosa.output.write_wav(file, data, SAMPLING_RATE)
 
-    ## mix two sounds
-    ## parameter snr controls the amplitude of the second speaker (noise level)
     def reinit(self):
         '''Init the training data using the wav files'''
         self.speaker_file_match = {}
@@ -100,7 +96,7 @@ class DataGenerator(object):
             # mix
             length = min(len(speech_1), len(speech_2))
             speech_1 = speech_1[:length]
-            speech_2 = speech_2[:length] * self.snr
+            speech_2 = speech_2[:length]
             speech_mix = speech_1 + speech_2
             # compute log spectrum for 1st speaker
             speech_1_spec = np.abs(stft(speech_1, FRAME_SIZE)[:, :NEFF])
@@ -156,8 +152,6 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--dir", type=str, help="root directory which \
                         contains the fold of audio files from each speaker")
     parser.add_argument("-o", "--output", type=str, help="output file name")
-    parser.add_argument("-s", "--snr", type=float, help="noise level for the \
-                        training datasets")
     args = parser.parse_args()
-    gen = DataGenerator(snr=args.snr, data_dir=args.dir, output=args.output)
+    gen = DataGenerator(data_dir=args.dir, output=args.output)
     gen.reinit()
