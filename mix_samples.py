@@ -8,8 +8,8 @@ import numpy as np
 # provide the wav name and mix
 # speech1 = '/media/nca/data/raw_data/speech_train_r/FCMM0/TRAIN_DR2_FCMM0_SI1957.WAV'
 # speech2 = '/media/nca/data/raw_data/speech_train_r/FKLC0/TRAIN_DR4_FKLC0_SX355.WAV'
-speech1 = '/Users/JAKE/Documents/deep-clustering/test/FA/FA01_01.wav'
-speech2 = '/Users/JAKE/Documents/deep-clustering/test/MC/MC13_01.wav'
+speech1 = '/Users/JAKE/Documents/deep-clustering/small_train_samples/FA/FA05_01.wav'
+speech2 = '/Users/JAKE/Documents/deep-clustering/small_train_samples/MC/MC17_01.wav'
 
 data1, _ = librosa.load(speech1, sr=8000)
 data2, _ = librosa.load(speech2, sr=8000)
