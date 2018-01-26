@@ -9,7 +9,7 @@ The code is based on zhr1201/deep-clustering in the Github.
   * scikit-learn
   * matplotlib
   * librosa
-  * sphfile
+  * mir_eval
   
 ## File documentation
   * audiopacker.py: pack audios from different speakers into .pkl format.
