@@ -11,6 +11,7 @@ import time
 
 import numpy as np
 import librosa
+import argparse
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
@@ -27,25 +28,22 @@ from model import Model
 from GlobalConstont import *
 
 
-# dir for test audio
-data_dir = 'mix.wav'
 # not useful during sample test
 sum_dir = 'sum'
 # dir to load model
 train_dir = 'train'
 
-lr = 0.00001  # not useful during test
 n_hidden = 300  # hidden state size
 batch_size = 1  # 1 for audio sample test
 hop_size = 64
 # oracle flag to decide if a frame need to be seperated
-sep_flag = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] * 10
+sep_flag = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] * 100
 # oracle permutation to concatenate the chuncks of output frames
-oracal_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] * 10
+oracal_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] * 100
 # import ipdb; ipdb.set_trace()
 
-
-def out_put(N_frame):
+## input is the file in wav form
+def out_put(input_file):
     '''Use trained model to infer N _frame chuncks of
     frames of input audio'''
     with tf.Graph().as_default():
@@ -54,7 +52,7 @@ def out_put(N_frame):
         # recurrent keep prob
         p_keep_rc = tf.placeholder(tf.float32, shape=None)
         # audio sample generator
-        data_generator = AudioSampleReader(data_dir)
+        data_generator = AudioSampleReader(input_file)
         # placeholder for model input
         in_data = tf.placeholder(
             tf.float32, shape=[batch_size, FRAMES_PER_SAMPLE, NEFF])
@@ -66,19 +64,20 @@ def out_put(N_frame):
         sess = tf.Session()
         # restore the model
         saver.restore(sess, 'train/model.ckpt')
-        tot_frame = N_frame * FRAMES_PER_SAMPLE
         # arrays to store output waveform
-        out_audio1 = np.zeros([(tot_frame - 1) * hop_size + FRAME_SIZE])
-        out_audio2 = np.zeros([(tot_frame - 1) * hop_size + FRAME_SIZE])
-        mix = np.zeros([(tot_frame - 1) * hop_size + FRAME_SIZE])
+        out_audio1 = np.zeros([(data_generator.tot_samp*FRAMES_PER_SAMPLE - 1) *
+        hop_size + FRAME_SIZE])
+        out_audio2 = np.zeros([(data_generator.tot_samp*FRAMES_PER_SAMPLE - 1) *
+        hop_size + FRAME_SIZE])
+        mix = np.zeros([(data_generator.tot_samp*FRAMES_PER_SAMPLE - 1) * hop_size +
+        FRAME_SIZE])
+
         N_assign = 0
 
-        # for every chunk of frames of data
-        for step in range(N_frame):
+        data_batch = data_generator.gen_next()
+        step = 0
+        while data_batch is not None:
             # import ipdb; ipdb.set_trace()
-            data_batch = data_generator.gen_next()
-            if data_batch is None:
-                break
             # log spectrum info.
             in_data_np = np.concatenate(
                 [np.reshape(item['Sample'], [1, FRAMES_PER_SAMPLE, NEFF])
@@ -112,7 +111,6 @@ def out_put(N_frame):
                 if embedding_ac == []:
                     break
                 kmean = KMeans(n_clusters=2, random_state=0).fit(embedding_ac)
-
             else:
                 # if the frame don't need to be seperated
                 # don't split the embeddings
@@ -206,12 +204,28 @@ def out_put(N_frame):
                 frame_out2 = np.fft.ifft(out2).astype(np.float64)
                 frame_mix = np.fft.ifft(out_mix).astype(np.float64)
 
-                out_audio1[tot_ind * hop_size:tot_ind * hop_size + FRAME_SIZE] += frame_out1 * 0.5016
-                out_audio2[tot_ind * hop_size:tot_ind * hop_size + FRAME_SIZE] += frame_out2 * 0.5016
-                mix[tot_ind * hop_size:tot_ind * hop_size + FRAME_SIZE] += frame_mix * 0.5016
+                out_audio1[tot_ind * hop_size:(tot_ind * hop_size + len(frame_out1))] += frame_out1 * 0.5016
+                out_audio2[tot_ind * hop_size:(tot_ind * hop_size + len(frame_out2))] += frame_out2 * 0.5016
+                mix[tot_ind * hop_size:(tot_ind * hop_size + len(frame_mix))] += frame_mix * 0.5016
 
-        librosa.output.write_wav('out_31.wav', out_audio1, SAMPLING_RATE)
-        librosa.output.write_wav('out_32.wav', out_audio2, SAMPLING_RATE)
+            data_batch = data_generator.gen_next()
+            step += 1
 
+        ## pad the audio to 3 times in AudioSampleReader
+        ## restore the original audio
+        original_l1 = len(out_audio1) // 3
+        original_l2 = len(out_audio2) // 3
 
-out_put(4)
+        librosa.output.write_wav(input_file[0:-4] + "_1.wav",
+        out_audio1[original_l1:2*original_l1], SAMPLING_RATE)
+        librosa.output.write_wav(input_file[0:-4] + "_2.wav",
+        out_audio2[original_l2:2*original_l2], SAMPLING_RATE)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser("blind source separation")
+    parser.add_argument("-i", "--dir", type=str, help="input folder name")
+    args = parser.parse_args()
+    data_dir=args.dir
+    files = [os.path.join(data_dir, i) for i in os.listdir(data_dir) if i[-7:-4] == "mix"]
+    for i in files:
+      out_put(i)
