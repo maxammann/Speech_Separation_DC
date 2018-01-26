@@ -11,10 +11,10 @@ import time
 
 import numpy as np
 import tensorflow as tf
-from datagenerator2 import DataGenerator
+from datagenerator import DataGenerator
 from model import Model
 
-from GlobalConstont import *
+from constant import *
 
 ## assume the data is in the root directory
 ## the .pkl file lists of datasets as the training data
@@ -22,7 +22,7 @@ pkl_list = ['train.pkl']
 ## validation data
 val_list = ['val.pkl']
 sum_dir = 'summary'
-train_dir = 'model'
+train_dir = 'model_seeds'
 
 lr = 1e-3
 n_hidden = 300

@@ -4,7 +4,7 @@ Class Model: model for the deep clustering speech seperation
 import numpy as np
 import tensorflow as tf
 
-from GlobalConstont import *
+from constant import *
 
 # from ln_lstm import LayerNormalizedLSTMCell
 # from bnlstm import BNLSTMCell

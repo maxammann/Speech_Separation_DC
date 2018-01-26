@@ -23,10 +23,10 @@ import matplotlib as mpl
 mpl.use('agg')
 from matplotlib import pyplot as plt
 
-from AudioSampleReader import AudioSampleReader
+from audio_reader import AudioSampleReader
 from model import Model
 
-from GlobalConstont import *
+from constant import *
 
 n_hidden = 300  # hidden state size
 batch_size = 1  # 1 for audio sample test

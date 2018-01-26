@@ -10,7 +10,7 @@ import os
 import matplotlib as mpl
 mpl.use('agg')
 from matplotlib import pyplot as plt
-from GlobalConstont import *
+from constant import *
 
 
 def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):

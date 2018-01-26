@@ -20,15 +20,14 @@ import tensorflow as tf
 import ipdb
 import itertools
 
-from AudioSampleReader import AudioSampleReader
+from audio_reader import AudioSampleReader
 from model import Model
 
-from GlobalConstont import *
-
+from constant import *
 
 data_dir = 'mix.wav'
-sum_dir = 'sum'
-train_dir = 'train'
+sum_dir = 'summary'
+train_dir = 'model_seeds'
 
 lr = 0.00001  # not needed for test
 n_hidden = 300
