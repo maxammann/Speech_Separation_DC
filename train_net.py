@@ -27,6 +27,7 @@ train_dir = 'train'
 lr = 1e-3
 n_hidden = 300
 max_steps = 20000000
+#max_steps = 50
 batch_size = 128
 
 
@@ -70,6 +71,7 @@ def train():
 
         summary_writer = tf.summary.FileWriter(
             sum_dir, sess.graph)
+        train_loss = []
         val_loss = []
 
         last_epoch = data_generator.epoch
@@ -102,7 +104,8 @@ def train():
             # if np.isnan(loss_value):
                 # import ipdb; ipdb.set_trace()
             assert not np.isnan(loss_value)
-            if step % 100 == 0:
+            if step % 10 == 0: 
+                train_loss.append(loss_value.copy())
                 # show training progress every 100 steps
                 num_examples_per_step = batch_size
                 examples_per_sec = num_examples_per_step / duration
@@ -152,10 +155,10 @@ def train():
                     loss_sum += loss_value
                 val_loss.append(loss_sum / count)
                 print ('validation loss: %.3f' % (loss_sum / count))
-                np.array(val_loss).tofile('val_loss')
 
             last_epoch = data_generator.epoch
-
+        np.save("sum/train_err", train_loss)
+        np.save("sum/val_err", val_loss)
 if __name__ == "__main__":
     print('%s start' % datetime.now())
     train()

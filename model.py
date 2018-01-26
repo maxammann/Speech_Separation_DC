@@ -153,7 +153,7 @@ class Model(object):
             tf.nn.l2_loss(
                 tf.matmul(tf.transpose(
                     Y_v, [0, 2, 1]), Y_v))
-        loss_v = (loss_batch) / self.batch_size
+        loss_v = (loss_batch) / self.batch_size / (FRAMES_PER_SAMPLE^2)
         tf.summary.scalar('loss', loss_v)
         return loss_v
 
