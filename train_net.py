@@ -21,13 +21,12 @@ from GlobalConstont import *
 pkl_list = ['train.pkl']
 ## validation data
 val_list = ['val.pkl']
-sum_dir = 'sum'
-train_dir = 'train'
+sum_dir = 'summary'
+train_dir = 'model'
 
 lr = 1e-3
 n_hidden = 300
-max_steps = 20000000
-#max_steps = 50
+max_steps = 2000000
 batch_size = 128
 
 
