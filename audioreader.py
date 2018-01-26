@@ -1,5 +1,5 @@
 '''
-Class AudioSampleReader:
+Class audio_reader:
     read in a single audio sample for test
 '''
 import numpy as np
@@ -32,10 +32,9 @@ def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
     return np.fft.rfft(frames)
 
 
-class AudioSampleReader(object):
+class AudioReader(object):
     '''
-    Class AudioSampleReader:
-        read in a single audio sample for test using trained model
+        read in a single audio sample
     '''
     def __init__(self, data_dir):
         '''Load in the audio file and transform the signal into

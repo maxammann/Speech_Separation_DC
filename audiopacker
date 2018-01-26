@@ -1,6 +1,6 @@
 '''
-Class DataGenerator
-Script using DataGenerator to generate .pkl format data set
+Class PackData
+Script using PackData to generate .pkl format datasets
 '''
 import numpy as np
 import librosa
@@ -34,7 +34,7 @@ def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
     return np.fft.rfft(frames)
 
 
-class DataGenerator(object):
+class PackData(object):
     def __init__(self, data_dir, output):
         '''preprocess the training data
         data_dir: dir containing the training data
@@ -153,5 +153,5 @@ if __name__ == '__main__':
                         contains the fold of audio files from each speaker")
     parser.add_argument("-o", "--output", type=str, help="output file name")
     args = parser.parse_args()
-    gen = DataGenerator(data_dir=args.dir, output=args.output)
+    gen = PackData(data_dir=args.dir, output=args.output)
     gen.reinit()

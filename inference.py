@@ -23,7 +23,7 @@ import matplotlib as mpl
 mpl.use('agg')
 from matplotlib import pyplot as plt
 
-from audio_reader import AudioSampleReader
+from audioreader import AudioReader
 from model import Model
 
 from constant import *
@@ -45,7 +45,7 @@ def blind_source_separation(input_file):
         # recurrent keep prob
         p_keep_rc = tf.placeholder(tf.float32, shape=None)
         # audio sample generator
-        data_generator = AudioSampleReader(input_file)
+        data_generator = AudioReader(input_file)
         # placeholder for model input
         in_data = tf.placeholder(
             tf.float32, shape=[batch_size, FRAMES_PER_SAMPLE, NEFF])
@@ -56,7 +56,7 @@ def blind_source_separation(input_file):
         saver = tf.train.Saver(tf.all_variables())
         sess = tf.Session()
         # restore the model
-        saver.restore(sess, 'train/model.ckpt')
+        saver.restore(sess, 'seeds/model.ckpt')
         # arrays to store output waveform
         N_frames = data_generator.tot_samp
         out_audio1 = np.zeros([(N_frames*FRAMES_PER_SAMPLE - 1) * 
@@ -204,7 +204,7 @@ def blind_source_separation(input_file):
             data_batch = data_generator.gen_next()
             step += 1
 
-        ## pad the audio to 3 times in AudioSampleReader
+        ## the audio has been padded 3 times in AudioReader
         ## restore the original audio
         original_l1 = len(out_audio1) // 3
         original_l2 = len(out_audio2) // 3

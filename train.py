@@ -22,7 +22,7 @@ pkl_list = ['train.pkl']
 ## validation data
 val_list = ['val.pkl']
 sum_dir = 'summary'
-train_dir = 'model_seeds'
+train_dir = 'seeds'
 
 lr = 1e-3
 n_hidden = 300
