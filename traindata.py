@@ -4,12 +4,10 @@ import os
 import numpy as np
 from constant import *
 
-## the length of the audio is 5s
-
-def audio_clip(data_dir, N, low, high, duration):
+def audio_clip(data_dir, N, low, high, duration, output_dir):
   speakers = glob.glob(os.path.join(data_dir, "*.sph"))
   for i in range(len(speakers)):
-    p = os.path.join(data_dir, str(i))
+    p = os.path.join(output_dir, str(i))
     if not os.path.exists(p):
       os.makedirs(p)
     y, _ = librosa.load(speakers[i], sr=SAMPLING_RATE)
@@ -19,4 +17,6 @@ def audio_clip(data_dir, N, low, high, duration):
         y[k*SAMPLING_RATE : (k+duration)*SAMPLING_RATE], SAMPLING_RATE)
 
 if __name__ == "__main__":
-  audio_clip("data", 2, 60, 600, 5)
+  # generate training and validation datasets
+  audio_clip("data", 2160, 60, 600, 5, "data/train")
+  audio_clip("data", 72, 605, 725, 5, "data/val")
