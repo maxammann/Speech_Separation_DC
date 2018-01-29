@@ -1,5 +1,5 @@
 import argparse
-import inference
+from infer import blind_source_separation
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("blind source separation")
@@ -9,4 +9,4 @@ if __name__ == '__main__':
     ## decompose audios with the suffix "mix" at the end
     files = [os.path.join(data_dir, i) for i in os.listdir(data_dir) if i[-7:-4] == "mix"]
     for i in files:
-      inference.blind_source_separation(i)
+      blind_source_separation(i)
