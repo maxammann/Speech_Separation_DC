@@ -23,7 +23,10 @@ pkl_list = ['train.pkl']
 ## validation data
 val_list = ['val.pkl']
 sum_dir = 'summary'
-train_dir = 'seeds'
+model_dir = 'seeds'
+
+train_loss_file = os.path.join(sum_dir, "train_loss")
+loss_loss_file = os.path.join(sum_dir, "val_loss")
 
 lr = 1e-3
 n_hidden = 300
@@ -62,20 +65,20 @@ def train():
         sess = tf.Session()
 
         # either train from scratch or a trained model
-        seeds = [f for f in os.listdir(train_dir) if re.match(r'model\.ckpt.*', f)]
+        seeds = [f for f in os.listdir(model_dir) if re.match(r'model\.ckpt.*', f)]
         if len(seeds) > 0:
-          saver.restore(sess, 'seeds/model.ckpt')
+          saver.restore(sess, os.path.join(model_dir, "model.ckpt"))
         else:
           init = tf.global_variables_initializer()
           sess.run(init)
 
         init_step = 0
-        if os.path.isfile("summary/train_loss"):
-          train_loss = np.load("summary/train_loss")
+        if os.path.isfile(train_loss_file):
+          train_loss = np.load(train_loss_file)
         else:
           train_loss = []
-        if os.path.isfile("summary/val_loss"):
-          val_loss = np.load("summary/val_loss")
+        if os.path.isfile(val_loss_file):
+          val_loss = np.load(val_loss_file)
         else:
           val_loss = []
 
@@ -125,7 +128,7 @@ def train():
                                      data_generator.epoch))
             if step % 500 == 0:
                 # save model every 4000 steps
-                checkpoint_path = os.path.join(train_dir, 'model.ckpt')
+                checkpoint_path = os.path.join(model_dir, 'model.ckpt')
                 saver.save(sess, checkpoint_path)
 
             if last_epoch != data_generator.epoch:
@@ -161,13 +164,13 @@ def train():
                     loss_sum += loss_value
                 val_loss.append(loss_sum / count)
                 print ('validation loss: %.3f' % (loss_sum / count))
-                np.save("summary/train_loss", train_loss)
-                np.save("summary/val_loss", val_loss)
+                np.save(train_loss_file, train_loss)
+                np.save(val_loss_file, val_loss)
 
             last_epoch = data_generator.epoch
 
-        np.save("summary/train_loss", train_loss)
-        np.save("summary/val_loss", val_loss)
+        np.save(train_loss_file, train_loss)
+        np.save(val_loss_file, val_loss)
 if __name__ == "__main__":
     print('%s start' % datetime.now())
     train()
