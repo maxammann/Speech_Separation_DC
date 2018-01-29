@@ -5,7 +5,6 @@ Class audio_reader:
 import numpy as np
 import librosa
 from numpy.lib import stride_tricks
-import ipdb
 import os
 import matplotlib as mpl
 mpl.use('agg')
