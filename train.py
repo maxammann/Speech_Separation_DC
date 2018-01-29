@@ -8,6 +8,7 @@ from __future__ import print_function
 from datetime import datetime
 import os.path
 import time
+import re
 
 import numpy as np
 import tensorflow as tf
@@ -61,18 +62,24 @@ def train():
         sess = tf.Session()
 
         # either train from scratch or a trained model
-        # saver.restore(sess, 'train/model.ckpt-492000')
-        # val_loss = np.fromfile('val_loss').tolist()
-        # init_step = 56001
-        init = tf.global_variables_initializer()
-        sess.run(init)
+        seeds = [f for f in os.listdir(train_dir) if re.match(r'model\.ckpt.*', f)]
+        if len(seeds) > 0:
+          saver.restore(sess, 'seeds/model.ckpt')
+        else:
+          init = tf.global_variables_initializer()
+          sess.run(init)
+
         init_step = 0
+        if os.path.isfile("summary/train_loss"):
+          train_loss = np.load("summary/train_loss")
+        else:
+          train_loss = []
+        if os.path.isfile("summary/val_loss"):
+          val_loss = np.load("summary/val_loss")
+        else:
+          val_loss = []
 
-        summary_writer = tf.summary.FileWriter(
-            sum_dir, sess.graph)
-        train_loss = []
-        val_loss = []
-
+        summary_writer = tf.train.SummaryWriter(sum_dir, sess.graph)
         last_epoch = data_generator.epoch
 
         for step in range(init_step, init_step + max_steps):
@@ -154,10 +161,13 @@ def train():
                     loss_sum += loss_value
                 val_loss.append(loss_sum / count)
                 print ('validation loss: %.3f' % (loss_sum / count))
+                np.save("summary/train_loss", train_loss)
+                np.save("summary/val_loss", val_loss)
 
             last_epoch = data_generator.epoch
-        np.save("sum/train_err", train_loss)
-        np.save("sum/val_err", val_loss)
+
+        np.save("summary/train_loss", train_loss)
+        np.save("summary/val_loss", val_loss)
 if __name__ == "__main__":
     print('%s start' % datetime.now())
     train()
