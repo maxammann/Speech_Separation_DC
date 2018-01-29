@@ -26,7 +26,7 @@ sum_dir = 'summary'
 model_dir = 'seeds'
 
 train_loss_file = os.path.join(sum_dir, "train_loss")
-loss_loss_file = os.path.join(sum_dir, "val_loss")
+val_loss_file = os.path.join(sum_dir, "val_loss")
 
 lr = 1e-3
 n_hidden = 300
@@ -82,7 +82,7 @@ def train():
         else:
           val_loss = []
 
-        summary_writer = tf.train.SummaryWriter(sum_dir, sess.graph)
+        summary_writer = tf.summary.FileWriter(sum_dir, sess.graph)
         last_epoch = data_generator.epoch
 
         for step in range(init_step, init_step + max_steps):
