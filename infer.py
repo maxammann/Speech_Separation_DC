@@ -31,6 +31,7 @@ from constant import *
 n_hidden = 300  # hidden state size
 batch_size = 1  # 1 for audio sample test
 hop_size = 64
+model_dir = "seeds"
 # oracle flag to decide if a frame need to be seperated
 sep_flag = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] * 100
 # oracle permutation to concatenate the chuncks of output frames
@@ -56,7 +57,7 @@ def blind_source_separation(input_file):
         saver = tf.train.Saver(tf.all_variables())
         sess = tf.Session()
         # restore the model
-        saver.restore(sess, 'seeds/model.ckpt')
+        saver.restore(sess, os.path.join(model_dir, "model.ckpt"))
         # arrays to store output waveform
         N_frames = data_generator.tot_samp
         out_audio1 = np.zeros([(N_frames*FRAMES_PER_SAMPLE - 1) * 
@@ -206,16 +207,18 @@ def blind_source_separation(input_file):
 
         ## the audio has been padded 3 times in AudioReader
         ## restore the original audio
-        original_l1 = len(out_audio1) // 3
-        original_l2 = len(out_audio2) // 3
-
-        librosa.output.write_wav(input_file[0:-4] + "_1.wav",
-          out_audio1[original_l1:2*original_l1], SAMPLING_RATE)
-        librosa.output.write_wav(input_file[0:-4] + "_2.wav",
-          out_audio2[original_l2:2*original_l2], SAMPLING_RATE)
+        len1 = len(out_audio1) // 3
+        len2 = len(out_audio2) // 3
+        source1 = out_audio1[len1:2*len1]
+        source2 = out_audio2[len2:2*len2]
+        return [(source1, SAMPLING_RATE), (source2, SAMPLING_RATE)]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("blind source separation")
     parser.add_argument("-i", "--input", type=str, help="input audio file")
     args = parser.parse_args()
-    blind_source_separation(args.input)
+    sources = blind_source_separation(args.input)
+
+    for i in range(len(sources)):
+      librosa.output.write_wav(args.input[0:-4] + "_source" + str(i+1) + ".wav",
+        sources[i][0], sources[i][1])
