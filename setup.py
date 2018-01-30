@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
-setup(name='DeAudio',
-      version='1.0',
+setup(name='DeWave',
+      version='0.1',
       description='Single-channel blind source separation',
       long_description='Decomposing two overlapping speech signals that are \
       recoded in one channel and restoring signals for each speaker',
@@ -18,7 +18,7 @@ setup(name='DeAudio',
         'Blind source separation',
         'Single channel',
       ],
-      url='https://github.com/chaodengusc/DeAudio',
+      url='https://github.com/chaodengusc/DeWave',
       author='Chao Deng',
       author_email='chaodengusc@gmail.com',
       license='MIT',
@@ -31,8 +31,8 @@ setup(name='DeAudio',
         'mir_eval',
       ],
       entry_points={'console_scripts':[
-        'deaudio-clip=DeAudio.dataprep:audioclips',
-        'deaudio-pack=DeAudio.datapack:packclips',
+        'deaudio-clip=DeWave.dataprep:audioclips',
+        'deaudio-pack=DeWave.datapack:packclips',
       ]},
       include_package_data=True,
       zip_safe=False)
