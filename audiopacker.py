@@ -12,25 +12,6 @@ import argparse
 import glob
 
 
-def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
-    """ short time fourier transform of audio signal """
-    win = window(frameSize)
-    hopSize = int(frameSize - np.floor(overlapFac * frameSize))
-    # zeros at beginning (thus center of 1st window should be for sample nr. 0)
-    # samples = np.append(np.zeros(np.floor(frameSize / 2.0)), sig)
-    samples = np.array(sig, dtype='float64')
-    # cols for windowing
-    cols = int(np.ceil((len(samples) - frameSize) / float(hopSize)))
-    # zeros at end (thus samples can be fully covered by frames)
-    # samples = np.append(samples, np.zeros(frameSize))
-    frames = stride_tricks.as_strided(
-        samples,
-        shape=(cols, frameSize),
-        strides=(samples.strides[0] * hopSize, samples.strides[0])).copy()
-    frames *= win
-    return np.fft.rfft(frames)
-
-
 class PackData(object):
     def __init__(self, data_dir, output):
         '''preprocess the training data
@@ -96,17 +77,17 @@ class PackData(object):
             speech_2 = speech_2[:length]
             speech_mix = speech_1 + speech_2
             # compute log spectrum for 1st speaker
-            speech_1_spec = np.abs(stft(speech_1, FRAME_SIZE)[:, :NEFF])
+            speech_1_spec = np.abs(librosa.core.stft(speech_1, FRAME_SIZE)[:, :NEFF])
             speech_1_spec = np.maximum(
                 speech_1_spec, np.max(speech_1_spec) / MIN_AMP)
             speech_1_spec = 20. * np.log10(speech_1_spec * AMP_FAC)
             # same for the 2nd speaker
-            speech_2_spec = np.abs(stft(speech_2, FRAME_SIZE)[:, :NEFF])
+            speech_2_spec = np.abs(librosa.core.stft(speech_2, FRAME_SIZE)[:, :NEFF])
             speech_2_spec = np.maximum(
                 speech_2_spec, np.max(speech_2_spec) / MIN_AMP)
             speech_2_spec = 20. * np.log10(speech_2_spec * AMP_FAC)
             # same for the mixture
-            speech_mix_spec0 = stft(speech_mix, FRAME_SIZE)[:, :NEFF]
+            speech_mix_spec0 = librosa.core.stft(speech_mix, FRAME_SIZE)[:, :NEFF]
             speech_mix_spec = np.abs(speech_mix_spec0)
             # speech_phase = speech_mix_spec0 / speech_mix_spec
             speech_mix_spec = np.maximum(
