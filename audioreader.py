@@ -6,9 +6,6 @@ import numpy as np
 import librosa
 from numpy.lib import stride_tricks
 import os
-import matplotlib as mpl
-mpl.use('agg')
-from matplotlib import pyplot as plt
 from constant import *
 
 

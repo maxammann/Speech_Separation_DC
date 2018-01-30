@@ -5,13 +5,9 @@ Class DataGenerator:
 '''
 import numpy as np
 import librosa
-import cPickle
+import pickle
 from numpy.lib import stride_tricks
 import os
-import matplotlib as mpl
-mpl.use('agg')
-from matplotlib import pyplot as plt
-import cPickle
 from constant import *
 
 
@@ -24,10 +20,10 @@ class DataGenerator(object):
         self.epoch = 0
         # read in all the .pkl files
         for pkl in pkl_list:
-            self.samples.extend(cPickle.load(open(pkl, 'rb')))
+            self.samples.extend(pickle.load(open(pkl, 'rb')))
         self.tot_samp = len(self.samples)
-        print self.tot_samp
-        print 'samples'
+        print(self.tot_samp)
+        print('samples')
         np.random.shuffle(self.samples)
 
     def gen_batch(self):

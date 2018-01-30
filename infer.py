@@ -13,19 +13,13 @@ import time
 import numpy as np
 import librosa
 import argparse
-from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import tensorflow as tf
 import itertools
 from numpy.lib import stride_tricks
-import matplotlib as mpl
-mpl.use('agg')
-from matplotlib import pyplot as plt
-
 from audioreader import AudioReader
 from model import Model
-
 from constant import *
 
 n_hidden = 300  # hidden state size

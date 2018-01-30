@@ -4,12 +4,9 @@ Script using PackData to generate .pkl format datasets
 '''
 import numpy as np
 import librosa
-import cPickle
+import pickle
 from numpy.lib import stride_tricks
 import os
-import matplotlib as mpl
-mpl.use('agg')
-from matplotlib import pyplot as plt
 from constant import *
 import argparse
 import glob
@@ -143,7 +140,7 @@ class PackData(object):
                 self.samples.append(sample_dict)
                 k = k + FRAMES_PER_SAMPLE
         # dump the generated sample list
-        cPickle.dump(self.samples, open(self.output, 'wb'))
+        pickle.dump(self.samples, open(self.output, 'wb'))
         self.tot_samp = len(self.samples)
         np.random.shuffle(self.samples)
 

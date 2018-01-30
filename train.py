@@ -18,7 +18,6 @@ from model import Model
 from constant import *
 
 ## assume the data is in the root directory
-## the .pkl file lists of datasets as the training data
 pkl_list = ['train.pkl']
 ## validation data
 val_list = ['val.pkl']
@@ -127,7 +126,6 @@ def train():
                                      examples_per_sec, sec_per_batch,
                                      data_generator.epoch))
             if step % 500 == 0:
-                # save model every 4000 steps
                 checkpoint_path = os.path.join(model_dir, 'model.ckpt')
                 saver.save(sess, checkpoint_path)
 

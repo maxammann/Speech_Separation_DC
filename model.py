@@ -6,9 +6,6 @@ import tensorflow as tf
 
 from constant import *
 
-# from ln_lstm import LayerNormalizedLSTMCell
-# from bnlstm import BNLSTMCell
-
 
 class Model(object):
     def __init__(self, n_hidden, batch_size, p_keep_ff, p_keep_rc):
@@ -17,12 +14,6 @@ class Model(object):
            p_keep_rc: recurrent keep probability'''
         self.n_hidden = n_hidden
         self.batch_size = batch_size
-        # if training:
-        #     self.p_keep_ff = 1 - P_DROPOUT_FF
-        #     self.p_keep_rc = 1 - P_DROPOUT_RC
-        # else:
-        #     self.p_keep_ff = 1
-        #     self.p_keep_rc = 1
         self.p_keep_ff = p_keep_ff
         self.p_keep_rc = p_keep_rc
         # biases and weights for the last layer
@@ -37,13 +28,8 @@ class Model(object):
 
     def inference(self, x):
         '''The structure of the network'''
-        # ipdb.set_trace()
         # four layer of LSTM cell blocks
         with tf.variable_scope('BLSTM1') as scope:
-            # lstm_fw_cell = tf.nn.rnn_cell.LSTMCell(
-            #     self.n_hidden)
-            # lstm_bw_cell = tf.nn.rnn_cell.LSTMCell(
-            #     self.n_hidden)
             lstm_fw_cell = tf.contrib.rnn.LayerNormBasicLSTMCell(
                 self.n_hidden, layer_norm=False,
                 dropout_keep_prob=self.p_keep_rc)
@@ -164,7 +150,6 @@ class Model(object):
             beta1=0.9,
             beta2=0.999,
             epsilon=1e-8)
-        # optimizer = tf.train.MomentumOptimizer(lr, 0.9)
         gradients, v = zip(*optimizer.compute_gradients(loss))
         gradients, _ = tf.clip_by_global_norm(gradients, 200)
         train_op = optimizer.apply_gradients(

@@ -46,7 +46,7 @@ def test(source1, source2, frac=0.7):
   sources = blind_source_separation(mix_name)
 
   for i in range(len(sources)):
-    librosa.output.write_wav(mix_name[0:-7] + "_source" + str(i+1) + ".wav",
+    librosa.output.write_wav(mix_name[0:-7] + "source" + str(i+1) + ".wav",
       sources[i][0], sources[i][1])
 
   reference_sources = [data1[:m], data2[:m]]
