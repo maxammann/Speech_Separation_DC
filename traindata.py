@@ -18,5 +18,5 @@ def audio_clip(data_dir, N, low, high, duration, output_dir):
 
 if __name__ == "__main__":
   # generate training and validation datasets
-  audio_clip("data", 2, 60, 600, 5, "data/train")
-  audio_clip("data", 2, 605, 725, 5, "data/val")
+  audio_clip("data", 2160, 60, 600, 5, "data/train")
+  audio_clip("data", 72, 605, 725, 5, "data/val")
