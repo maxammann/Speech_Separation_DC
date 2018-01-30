@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='DeAudio',
-      version='0.1',
+      version='1.0',
       description='Single-channel blind source separation',
       long_description='Decomposing two overlapping speech signals that are \
       recoded in one channel and restoring signals for each speaker',
@@ -12,7 +12,7 @@ setup(name='DeAudio',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Topic :: Blind source separation :: Audio',
+        'Topic :: Software Development :: Build Tools',
       ],
       keywords=[
         'Blind source separation',
