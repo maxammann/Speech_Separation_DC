@@ -8,7 +8,7 @@ import librosa
 import pickle
 from numpy.lib import stride_tricks
 import os
-from constant import *
+from .constant import *
 
 
 class DataGenerator(object):

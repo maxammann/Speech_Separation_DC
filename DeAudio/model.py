@@ -4,7 +4,7 @@ Class Model: model for the deep clustering speech seperation
 import numpy as np
 import tensorflow as tf
 
-from constant import *
+from .constant import *
 
 
 class Model(object):

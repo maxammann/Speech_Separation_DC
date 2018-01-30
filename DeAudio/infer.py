@@ -18,9 +18,9 @@ from sklearn.cluster import KMeans
 import tensorflow as tf
 import itertools
 from numpy.lib import stride_tricks
-from audioreader import AudioReader
-from model import Model
-from constant import *
+from .audioreader import AudioReader
+from .model import Model
+from .constant import *
 
 n_hidden = 300  # hidden state size
 batch_size = 1  # 1 for audio sample test

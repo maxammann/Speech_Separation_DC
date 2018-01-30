@@ -6,7 +6,7 @@ import numpy as np
 import librosa
 from numpy.lib import stride_tricks
 import os
-from constant import *
+from .constant import *
 
 
 class AudioReader(object):

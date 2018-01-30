@@ -7,7 +7,7 @@ import librosa
 import pickle
 from numpy.lib import stride_tricks
 import os
-from constant import *
+from .constant import *
 import argparse
 import glob
 
@@ -124,12 +124,3 @@ class PackData(object):
         pickle.dump(self.samples, open(self.output, 'wb'))
         self.tot_samp = len(self.samples)
         np.random.shuffle(self.samples)
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser("The function is to pack the audio files")
-    parser.add_argument("-d", "--dir", type=str, help="root directory which \
-                        contains the fold of audio files from each speaker")
-    parser.add_argument("-o", "--output", type=str, help="output file name")
-    args = parser.parse_args()
-    gen = PackData(data_dir=args.dir, output=args.output)
-    gen.reinit()

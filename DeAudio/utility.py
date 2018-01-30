@@ -1,7 +1,7 @@
 import mir_eval
 import numpy as np
 import librosa
-from infer import blind_source_separation
+from .infer import blind_source_separation
 
 def evaluate(reference_sources, estimated_sources):
     m = len(reference_sources[0])

@@ -12,10 +12,10 @@ import re
 
 import numpy as np
 import tensorflow as tf
-from datagenerator import DataGenerator
-from model import Model
+from .datagenerator import DataGenerator
+from .model import Model
 
-from constant import *
+from .constant import *
 
 ## assume the data is in the root directory
 pkl_list = ['train.pkl']
