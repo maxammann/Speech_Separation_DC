@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ## Script is used to generate training and validation datasets from sph files
-from .traindata import audio_clip
+from .clip import audio_clip
 import argparse
 parser = argparse.ArgumentParser("generate training data")
 parser.add_argument("--dir", type=str, help="input folder name",
