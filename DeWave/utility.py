@@ -4,9 +4,10 @@ from .infer import blind_source_separation
 
 
 class Util:
-    def __init__(self, source1, source2):
+    def __init__(self, source1, source2, model=None):
         self.source1 = source1
         self.source2 = source2
+        self.model = model
 
     ## source1 is the primary speaker
     def audiomixer(self, frac=0.7):
@@ -25,7 +26,7 @@ class Util:
 
     def test(self, frac=0.7):
         ref1, ref2, mix_name = self.audiomixer(frac=frac)
-        sources = blind_source_separation(mix_name)
+        sources = blind_source_separation(mix_name, self.model)
         estimate1 = sources[0][0]
         estimate2 = sources[1][0]
         ref1 = ref1 / np.linalg.norm(ref1, 2)

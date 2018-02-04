@@ -29,7 +29,9 @@ The python is available on PyPI, and you can install it by typing
      into this folder. The function `dewave-clip` can help generate clips based
      on these audios. As an example, one can download two audio files using the
      links as follows:     
-     https://drive.google.com/open?id=1r7FtoEyd_2Xe98OQSs8BciUs7RNry8UW
+     https://drive.google.com/open?id=1r7FtoEyd_2Xe98OQSs8BciUs7RNry8UW.   
+     The source of datasets is from   
+     http://www-lium.univ-lemans.fr/en/content/ted-lium-corpus.   
      After downloading the files and put them into the data directory. Under the
      current working directory, create a directory called data. Then type  
      `dewave-clip --dir=data --out=data/train --num=256`  
@@ -51,8 +53,8 @@ The python is available on PyPI, and you can install it by typing
      in commmand line to start training the DNN model. Stop the training process once the loss on
      the validation datasets converges.
 ## Infering based on trained model
-  1. For a mixed audio file, e.g. mix.wav, type
-     `dewave-infer --input_file=mix.wav --model_dir=seeds`  
+  1. For a mixed audio file, e.g. mix.wav, type    
+     `dewave-infer --input_file=mix.wav --model_dir=seeds`    
      in command line to restore the sources. Two restored audios called mix_source1.wav and 
      mix_source2.wav are generated. One can download a mixed sample through the 
      link:  
