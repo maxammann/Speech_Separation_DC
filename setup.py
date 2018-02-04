@@ -25,7 +25,6 @@ setup(name='DeWave',
         'numpy',
         'scikit-learn',
         'librosa',
-        'mir_eval',
       ],
       entry_points={'console_scripts':[
         'dewave-clip=DeWave.cmddataprep:audioclips',
