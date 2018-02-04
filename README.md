@@ -28,9 +28,8 @@ The python is available on PyPI, and you can install it by typing
      one should create a folder and put all audios that belong to this speaker
      into this folder. The function `dewave-clip` can help generate clips based
      on these audios. As an example, one can download two audio files using the
-     links as follows:  
-     https://drive.google.com/open?id=15zPtDBkb4VcxvgS7O3QOCqKdERMeEgEO  
-     https://drive.google.com/open?id=1m2b7reWlJ5qu5zh1cTFSBdOw9fU6jO9b.  
+     links as follows:     
+     https://drive.google.com/open?id=1r7FtoEyd_2Xe98OQSs8BciUs7RNry8UW
      After downloading the files and put them into the data directory. Under the
      current working directory, create a directory called data. Then type  
      `dewave-clip --dir=data --out=data/train --num=256`  
@@ -55,12 +54,14 @@ The python is available on PyPI, and you can install it by typing
   1. For a mixed audio file, e.g. mix.wav, type
      `dewave-infer --input_file=mix.wav --model_dir=seeds`  
      in command line to restore the sources. Two restored audios called mix_source1.wav and 
-     mix_source2.wav are generated. 
+     mix_source2.wav are generated. One can download a mixed sample through the 
+     link:  
+     https://drive.google.com/open?id=1s46w2_9IzVA8LdrnirdI6R8o7etq79-R
 
 ## Pretrained model
   I have a pretrained model using TED talks from 5 speakers. One can download
   the model through the link below:  
-  https://drive.google.com/open?id=1MMOMKlNI0-wIRUrNIX4KlFRrkm6UvSi1. 
+  https://drive.google.com/open?id=1mSsJYighwgAxLC2AFnRXq1GHBuJhQgiC
 
 ## References
   https://arxiv.org/abs/1508.04306
