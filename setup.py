@@ -28,8 +28,10 @@ setup(name='DeWave',
         'mir_eval',
       ],
       entry_points={'console_scripts':[
-        'dewave-clip=DeWave.dataprep:audioclips',
-        'dewave-pack=DeWave.datapack:packclips',
+        'dewave-clip=DeWave.cmddataprep:audioclips',
+        'dewave-pack=DeWave.cmddatapack:packclips',
+        'dewave-train=DeWave.cmdtrain:trainmodel',
+        'dewave-infer=DeWave.cmdinfer:infer',
       ]},
       include_package_data=True,
       zip_safe=False)

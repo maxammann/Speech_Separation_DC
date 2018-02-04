@@ -22,18 +22,17 @@ from .audioreader import AudioReader
 from .model import Model
 from .constant import *
 
-n_hidden = 300  # hidden state size
-batch_size = 1  # 1 for audio sample test
-hop_size = 64
-model_dir = "seeds"
-# oracle flag to decide if a frame need to be seperated
-sep_flag = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] * 100
-# oracle permutation to concatenate the chuncks of output frames
-oracal_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] * 100
 
 ## input is the file in wav form
 ## the pretrained model is stored at train/model.ckpt
-def blind_source_separation(input_file):
+def blind_source_separation(input_file, model_dir):
+    n_hidden = N_HIDDEN
+    batch_size = 1  # infer one audio
+    hop_size = FRAME_SIZE // 4
+    # oracle flag to decide if a frame need to be seperated
+    sep_flag = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] * 10000
+    # oracle permutation to concatenate the chuncks of output frames
+    oracal_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] * 10000
     with tf.Graph().as_default():
         # feed forward keep prob
         p_keep_ff = tf.placeholder(tf.float32, shape=None)
@@ -205,14 +204,6 @@ def blind_source_separation(input_file):
         len2 = len(out_audio2) // 3
         source1 = out_audio1[len1:2*len1]
         source2 = out_audio2[len2:2*len2]
+        librosa.output.write_wav(input_file[0:-4]+"_source1.wav", source1, SAMPLING_RATE)
+        librosa.output.write_wav(input_file[0:-4]+"_source2.wav", source2, SAMPLING_RATE)
         return [(source1, SAMPLING_RATE), (source2, SAMPLING_RATE)]
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser("blind source separation")
-    parser.add_argument("-i", "--input", type=str, help="input audio file")
-    args = parser.parse_args()
-    sources = blind_source_separation(args.input)
-
-    for i in range(len(sources)):
-      librosa.output.write_wav(args.input[0:-4] + "source" + str(i+1) + ".wav",
-        sources[i][0], sources[i][1])

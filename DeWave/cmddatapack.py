@@ -1,16 +1,6 @@
 #!/usr/bin/env python
-
-## Script is used to pack audio clips
-import numpy as np
-import librosa
-import pickle
-from numpy.lib import stride_tricks
-import os
-from .constant import *
 import argparse
-import glob
 from .audiopacker import PackData
-
 
 parser = argparse.ArgumentParser("The function is to pack the audio files")
 parser.add_argument("-d", "--dir", type=str, help="root directory which \

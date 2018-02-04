@@ -17,30 +17,26 @@ from .model import Model
 
 from .constant import *
 
-## assume the data is in the root directory
-pkl_list = ['train.pkl']
-## validation data
-val_list = ['val.pkl']
-sum_dir = 'summary'
-model_dir = 'seeds'
+## model_dir is the directory in which stores the trained model
+## sum_dir is the directory in which stores the summary of training process
+## train_pkl are a list of training datasets in pkl format 
+## val_pkl are a list of validation datasets in pkl format
+def train(model_dir, sum_dir, train_pkl, val_pkl):
+    lr = LEARNING_RATE
+    n_hidden = N_HIDDEN
+    max_steps = MAX_STEP
+    batch_size = TRAIN_BATCH_SIZE
 
-train_loss_file = os.path.join(sum_dir, "train_loss")
-val_loss_file = os.path.join(sum_dir, "val_loss")
+    train_loss_file = os.path.join(sum_dir, "train_loss")
+    val_loss_file = os.path.join(sum_dir, "val_loss")
 
-lr = 1e-3
-n_hidden = 300
-max_steps = 2000000
-batch_size = 128
-
-
-def train():
     with tf.Graph().as_default():
         # dropout keep probability
         p_keep_ff = tf.placeholder(tf.float32, shape=None)
         p_keep_rc = tf.placeholder(tf.float32, shape=None)
         # generator for training set and validation set
-        data_generator = DataGenerator(pkl_list, batch_size)
-        val_generator = DataGenerator(val_list, batch_size)
+        data_generator = DataGenerator(train_pkl, batch_size)
+        val_generator = DataGenerator(val_pkl, batch_size)
         # placeholder for input log spectrum, VAD info.,
         # and speaker indicator function
         in_data = tf.placeholder(

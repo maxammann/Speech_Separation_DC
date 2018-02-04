@@ -15,8 +15,6 @@ class Util:
         m = min(len(data1), len(data2))
         mix_data = data1[:m] + data2[:m] * frac
         mix_data = mix_data / max(abs(mix_data))
-        data1 = data1 / max(abs(mix_data))
-        data2 = data2 / max(abs(mix_data)) * frac
         source1 = self.source1.strip().split("/")
         source2 = self.source2.strip().split("/")
         speaker1, speaker2 = source1[-2], source2[-2]
@@ -28,15 +26,12 @@ class Util:
     def test(self, frac=0.7):
         ref1, ref2, mix_name = self.audiomixer(frac=frac)
         sources = blind_source_separation(mix_name)
-        for i in range(len(sources)):
-            librosa.output.write_wav(mix_name[0:-7] + "source" + str(i+1) + ".wav",
-                                     sources[i][0], sources[i][1])
         estimate1 = sources[0][0]
         estimate2 = sources[1][0]
-#        ref1 = ref1 / np.linalg.norm(ref1, 2)
-#        ref2 = ref2 / np.linalg.norm(ref2, 2)
-#        estimate1 = estimate1 / np.linalg.norm(estimate1, 2)
-#        estimate2 = estimate2 / np.linalg.norm(estimate2, 2)
+        ref1 = ref1 / np.linalg.norm(ref1, 2)
+        ref2 = ref2 / np.linalg.norm(ref2, 2)
+        estimate1 = estimate1 / np.linalg.norm(estimate1, 2)
+        estimate2 = estimate2 / np.linalg.norm(estimate2, 2)
        
         return np.max([abs(np.correlate(ref1, estimate1)), 
                        abs(np.correlate(ref2, estimate2)),
