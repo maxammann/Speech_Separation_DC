@@ -214,5 +214,5 @@ if __name__ == '__main__':
     sources = blind_source_separation(args.input)
 
     for i in range(len(sources)):
-      librosa.output.write_wav(args.input[0:-4] + "_source" + str(i+1) + ".wav",
+      librosa.output.write_wav(args.input[0:-4] + "source" + str(i+1) + ".wav",
         sources[i][0], sources[i][1])

@@ -9,6 +9,22 @@ import os
 from .constant import *
 
 
+def stft(sig, frameSize, overlapFac=0.75, window=np.hanning):
+    """ short time fourier transform of audio signal """
+    win = window(frameSize)
+    hopSize = int(frameSize - np.floor(overlapFac * frameSize))
+    samples = np.array(sig, dtype='float64')
+    # cols for windowing
+    cols = int(np.ceil((len(samples) - frameSize) / float(hopSize)) + 1)
+    # zeros at end (thus samples can be fully covered by frames)
+    samples = np.append(samples, np.zeros(frameSize))
+    frames = stride_tricks.as_strided(
+        samples,
+        shape=(cols, frameSize),
+        strides=(samples.strides[0] * hopSize, samples.strides[0])).copy()
+    frames *= win
+    return np.fft.rfft(frames)
+
 class AudioReader(object):
     '''
         read in a single audio sample
@@ -20,7 +36,7 @@ class AudioReader(object):
         speech_mix, _ = librosa.load(data_dir, SAMPLING_RATE)
         # fix the issue at the begining
         speech_mix = np.concatenate((speech_mix, speech_mix, speech_mix), axis=0)
-        speech_mix_spec0 = librosa.core.stft(speech_mix, FRAME_SIZE)[:, :NEFF]
+        speech_mix_spec0 = stft(speech_mix, FRAME_SIZE)[:, :NEFF]
         speech_mix_spec = np.abs(speech_mix_spec0)
         speech_phase = speech_mix_spec0 / speech_mix_spec
         speech_mix_spec = np.maximum(

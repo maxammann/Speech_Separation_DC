@@ -10,6 +10,7 @@ import os
 from .constant import *
 import argparse
 import glob
+from .audioreader import stft
 
 
 class PackData(object):
@@ -77,17 +78,17 @@ class PackData(object):
             speech_2 = speech_2[:length]
             speech_mix = speech_1 + speech_2
             # compute log spectrum for 1st speaker
-            speech_1_spec = np.abs(librosa.core.stft(speech_1, FRAME_SIZE)[:, :NEFF])
+            speech_1_spec = np.abs(stft(speech_1, FRAME_SIZE)[:, :NEFF])
             speech_1_spec = np.maximum(
                 speech_1_spec, np.max(speech_1_spec) / MIN_AMP)
             speech_1_spec = 20. * np.log10(speech_1_spec * AMP_FAC)
             # same for the 2nd speaker
-            speech_2_spec = np.abs(librosa.core.stft(speech_2, FRAME_SIZE)[:, :NEFF])
+            speech_2_spec = np.abs(stft(speech_2, FRAME_SIZE)[:, :NEFF])
             speech_2_spec = np.maximum(
                 speech_2_spec, np.max(speech_2_spec) / MIN_AMP)
             speech_2_spec = 20. * np.log10(speech_2_spec * AMP_FAC)
             # same for the mixture
-            speech_mix_spec0 = librosa.core.stft(speech_mix, FRAME_SIZE)[:, :NEFF]
+            speech_mix_spec0 = stft(speech_mix, FRAME_SIZE)[:, :NEFF]
             speech_mix_spec = np.abs(speech_mix_spec0)
             # speech_phase = speech_mix_spec0 / speech_mix_spec
             speech_mix_spec = np.maximum(
