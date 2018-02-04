@@ -7,7 +7,7 @@ import argparse
 
 def audio_clip(data_dir, N, low, high, duration, output_dir):
     speakers = glob.glob(os.path.join(data_dir, "*.sph"))
-    speakers.extend = glob.glob(os.path.join(data_dir, "*.wav")) 
+    speakers.extend(glob.glob(os.path.join(data_dir, "*.wav")))
     for i in range(len(speakers)):
         p = os.path.join(output_dir, str(i))
         if not os.path.exists(p):
