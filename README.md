@@ -24,39 +24,38 @@ The python is available on PyPI, and you can install it by typing
   
 ## Training your speaker separator
 ### Prepare training and validation datasets
-  * Put audio files in wav or sph format under the data directory. For each speaker,
-    one should create a folder and put all audios that belong to this speaker
-    into this folder. The function `dewave-clip` can help generate clips based
-    on these audios. As an example, one can download two audio files using the
-    links as follows:  
-    https://drive.google.com/open?id=15zPtDBkb4VcxvgS7O3QOCqKdERMeEgEO  
-    https://drive.google.com/open?id=1m2b7reWlJ5qu5zh1cTFSBdOw9fU6jO9b.  
-    After downloading the files and put them into the data directory. Under the
-    current working directory, create a directory called data. Then type  
-    `dewave-clip --dir=data --out=data/train --num=256`  
-    in the command line, which will automatically generate the training datasets.
-    Similarly, one can type  
-    `dewave-clip --dir=data --out=data/val --num=128`  
-    to obtain the validation data.
-  * Pack the data. Type  
-    `dewave-pack --dir=data/train --out=train.pkl`  
-    `dewave-pack --dir=data/val --out=val.pkl`  
-    The train.pkl is used as the training data and the val.pkl is used as the
-    validation data.
+  1. Put audio files in wav or sph format under the data directory. For each speaker,
+     one should create a folder and put all audios that belong to this speaker
+     into this folder. The function `dewave-clip` can help generate clips based
+     on these audios. As an example, one can download two audio files using the
+     links as follows:  
+     https://drive.google.com/open?id=15zPtDBkb4VcxvgS7O3QOCqKdERMeEgEO  
+     https://drive.google.com/open?id=1m2b7reWlJ5qu5zh1cTFSBdOw9fU6jO9b.  
+     After downloading the files and put them into the data directory. Under the
+     current working directory, create a directory called data. Then type  
+     `dewave-clip --dir=data --out=data/train --num=256`  
+     in the command line, which will automatically generate the training datasets.
+     Similarly, one can type  
+     `dewave-clip --dir=data --out=data/val --num=128`  
+     to obtain the validation data.
+  2. Pack the data. Type  
+     `dewave-pack --dir=data/train --out=train.pkl`  
+     `dewave-pack --dir=data/val --out=val.pkl`  
+     The train.pkl is used as the training data and the val.pkl is used as the
+     validation data.
 ### Train the DNN
-  * Create two directories. One is used to store trained
-    model. The other directory is used to store summary of learning process.
-    For example, under the current working directory, we create two directoies,
-    namely seeds and summary. Then one can type   
-    `dewave-train --model_dir=seeds --summary_dir=summary --train_pkl=train.pkl --val_pkl=val.pkl`  
-    in commmand line to start training the DNN model.
-  * Stop the training process once the loss on the validation datasets
-    converges.
+  1. Create two directories. One is used to store trained
+     model. The other directory is used to store summary of learning process.
+     For example, under the current working directory, we create two directoies,
+     namely seeds and summary. Then one can type   
+     `dewave-train --model_dir=seeds --summary_dir=summary --train_pkl=train.pkl --val_pkl=val.pkl`  
+     in commmand line to start training the DNN model. Stop the training process once the loss on
+     the validation datasets converges.
 ## Infering based on trained model
-  * For a mixed audio file, e.g. mix.wav, type
-    `dewave-infer --input_file=mix.wav --model_dir=seeds`  
-    in command line to restore the sources. Two restored audios called mix_source1.wav and 
-    mix_source2.wav are generated. 
+  1. For a mixed audio file, e.g. mix.wav, type
+     `dewave-infer --input_file=mix.wav --model_dir=seeds`  
+     in command line to restore the sources. Two restored audios called mix_source1.wav and 
+     mix_source2.wav are generated. 
 
 ## Pretrained model
   I have a pretrained model using TED talks from 5 speakers. One can download
@@ -71,5 +70,5 @@ The python is available on PyPI, and you can install it by typing
      Solution: install ffmpeg.
 
   2. ValueError: Cannot feed value of shape (X, 100, 129) for Tensor
-     'Placeholder_2:0', which has shape '(128, 100, 129)'. The number of audio
-     clips should be at least 128. 
+     'Placeholder_2:0', which has shape '(128, 100, 129)'. 
+     Solution: the number of audio clips should be at least 128. 
