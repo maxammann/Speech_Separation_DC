@@ -65,6 +65,16 @@ The python is available on PyPI, and you can install it by typing
   the model through the link below:  
   https://drive.google.com/open?id=1mSsJYighwgAxLC2AFnRXq1GHBuJhQgiC
 
+## Demo
+  Here are a few results based on the pretrained model. The mixed audios are
+  synthetic data based on Ted talks. For those speakers who have appeared in
+  the training datasets, I sampled different time periods to ensure that there
+  is no overlap between training data and test data. The demos can be accessed
+  using the links below:  
+  http://bit.ly/dewave-demo1   
+  http://bit.ly/dewave-demo2  
+  http://bit.ly/dewave-demo3  
+
 ## References
   https://arxiv.org/abs/1508.04306
 

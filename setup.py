@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='DeWave',
-      version='0.11',
+      version='0.12',
       description='Single-channel blind source separation',
       long_description='Decomposing two overlapping speech signals that are \
       recoded in one channel and restoring signals for each speaker',
