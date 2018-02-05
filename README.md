@@ -44,13 +44,13 @@ The python is available on PyPI, and you can install it by typing
      `dewave-pack --dir=data/val --out=val.pkl`  
      The train.pkl is used as the training data and the val.pkl is used as the
      validation data.
-### Train the DNN
+### Train the BI-LSTM
   1. Create two directories. One is used to store trained
      model. The other directory is used to store summary of learning process.
      For example, under the current working directory, we create two directoies,
      namely seeds and summary. Then one can type   
      `dewave-train --model_dir=seeds --summary_dir=summary --train_pkl=train.pkl --val_pkl=val.pkl`  
-     in commmand line to start training the DNN model. Stop the training process once the loss on
+     in commmand line to start training the BI-LSTM model. Stop the training process once the loss on
      the validation datasets converges.
 ## Infering based on trained model
   1. For a mixed audio file, e.g. mix.wav, type    
