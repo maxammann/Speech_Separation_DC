@@ -1,0 +1,25 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\begin{document}
+    \begin{tabularx}{1.03\textwidth}{lrrr}
+        Parameter & Symbol & Initial Guess & Optimization Range    \tabularnewline
+        \midrule
+        learning rate & $\eta$          & $10^{-5}$     & $(10^{-n})_{n \in \{3,5,7\}}$  \tabularnewline
+        \midrule
+%        train data & - & WSJ0 & TIMIT, WSJ0, TEDLIUM \tabularnewline
+%        \midrule
+        hidden units & $n_{hidden}$    & 600 & 50, 300, 600, 900 \tabularnewline
+        \midrule
+        hidden layers & $n_{recurrent}$ & 4 & 2, 4 \tabularnewline
+        \midrule
+        batch size & $b_s$           & 128 & 16, 32, 64, 128  \tabularnewline
+        \midrule
+        embedding dimension & $d$             & 40 & 5, 35, 40, 45 \tabularnewline
+        \midrule
+        dropout (rc ff) & - & (0.5 0.2)     & (0 0), (0.5 0.2) \tabularnewline
+        \midrule
+    \end{tabularx}
+\end{document}

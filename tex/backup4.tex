@@ -1,0 +1,29 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{tabular}{llcccccccc}
+        \multicolumn{2}{l}{Parameter/Metric} & 4a         & 4b            \tabularnewline
+        \midrule
+        & d          & 35                            & 45                \tabularnewline
+        & train data & A                             & A                 \tabularnewline
+        \midrule
+        & train time & 19:10h                        & 19:30h              \tabularnewline
+        \midrule
+        \multirow{2}{*}{loss}                & train      & 1780                          & \textbf{1765}       \tabularnewline
+        & eval       & \textbf{1597}                 & 1616               \tabularnewline
+        \midrule
+        \multirow{6}{*}{\shortstack{SDR                                                                                         \\in dB}}                 & A (train)      & 6.01          & \bf6.22             \tabularnewline
+        & A (eval)   & \bf2.74                       & 2.70                \tabularnewline
+        & B (train)  & \bf4.31                       & 4.25               \tabularnewline
+        & B (eval)   & \bf4.62                       & 4.36                \tabularnewline
+        & C (train)  & \bf1.42                       & 1.39                \tabularnewline
+        & C (eval)   & \bf1.54                       & 1.41               \tabularnewline
+    \end{tabular}
+%    \caption{Evaluation results for adjusting the embedding dimension.}
+%    \label{table.eval.embedding-dimension}
+\end{document}

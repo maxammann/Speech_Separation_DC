@@ -1,0 +1,31 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{tabular}{llcccccccc}
+        \multicolumn{2}{l}{Parameter/Metric} & 3a         & 3b        & 3d \tabularnewline
+        \midrule
+        & $b_s$      & 32        & 64                 & 16 \tabularnewline
+        & $\eta$     & $10^{-5}$ & $10^{-5}$          & $10^{-5}$ \tabularnewline
+        & train data & A         & A                  & A \tabularnewline
+        \midrule
+        & train time & 12:24h    & 15:30h             & 11:52h \tabularnewline
+        \midrule
+        \multirow{2}{*}{loss}                & train      & 1964      & \textbf{1851}      & 2046 \tabularnewline
+        & eval       & 1794      & \textbf{1645}      & 1908 \tabularnewline
+        \midrule
+        \multirow{6}{*}{\shortstack{SDR                                                                                \\in dB}}                 & A (train)      & 4.70      & \bf5.72                      & 4.34 \tabularnewline
+        & A (eval)   & 1.73      & \bf2.28               & 1.50 \tabularnewline
+
+        & B (train)  & 3.42      & \bf3.89            & 2.54 \tabularnewline
+        & B (eval)   & 3.68      & \bf3.90            & 2.77\tabularnewline
+        & C (train)  & 0.96      & \bf1.24            & 0.80\tabularnewline
+        & C (eval)   & \bf1.18   & 1.10               & 0.98\tabularnewline
+    \end{tabular}
+%    \caption{Evaluation results for adjusting the batch size.}
+%    \label{table.eval.batch-size}
+\end{document}

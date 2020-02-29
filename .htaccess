@@ -1,0 +1,4 @@
+AuthName "Prompt"
+AuthType Basic
+AuthUserFile /home/max/.htpasswd
+Require valid-user

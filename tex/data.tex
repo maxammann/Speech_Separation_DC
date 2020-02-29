@@ -1,0 +1,17 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\begin{document}
+    \begin{tabularx}{.5\textwidth}{cXcccc}
+        data set & \multicolumn{2}{c}{duration in h} & reference    \tabularnewline
+        & T & E & \tabularnewline
+        \midrule
+        TIMIT & 30 & 5 & [54] \tabularnewline
+        \midrule
+        WSJ0 & 30 & 5 & [55] \tabularnewline
+        \midrule
+        TEDLIUM & 30 & 5 & [56] \tabularnewline
+    \end{tabularx}
+\end{document}
