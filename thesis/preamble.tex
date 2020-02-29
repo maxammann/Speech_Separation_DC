@@ -1,0 +1,145 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+% EIHW (ENGLISH) Thesis template 
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+%%% 20.06.2018- Alice Baird - alice.baird@informatik.uni-augsburg.de
+%
+%\documentclass[a4paper, 10pt, draft]{report}
+\documentclass[a4paper, 11pt]{report}
+
+\usepackage{ifdraft}
+
+\usepackage{sectsty}
+\chapternumberfont{\normalsize}
+\chaptertitlefont{\normalsize}
+% \chapternumberfont{\Large}
+% \chaptertitlefont{\Large}
+
+%\usepackage[showframe]{geometry}
+
+\usepackage{psfrag,amsbsy,graphics,float}
+\usepackage{verbatim}
+\usepackage{url}
+%\usepackage{cite}
+
+\usepackage{wrapfig}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[active]{srcltx}
+\usepackage{algorithm}
+\usepackage[noend]{algorithmic}
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{struktex}
+% \usepackage{hyperref} Do not hide links for final version!
+\usepackage[hidelinks]{hyperref}
+\usepackage{color}
+
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=trad-abbrv]{biblatex}
+\addbibresource{bib/speech-separation.bib}
+
+% Define length
+\setlength{\textwidth}{15cm}
+\setlength{\textheight}{22cm}
+\setlength{\evensidemargin}{-2mm}
+\setlength{\oddsidemargin}{11mm}
+\setlength{\topmargin}{10mm}
+\setlength{\parindent}{0pt}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\usepackage[acronym]{glossaries}
+\usepackage{pgf}
+\usepackage[alsoload=binary]{siunitx}
+\sisetup{binary-units=true}
+% \usepackage{caption}
+
+\input{glossary.tex}
+\usepackage{import}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{shapes,arrows,calc,positioning,fit,arrows.meta}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\usepackage{multirow}
+
+\usepackage{subcaption}
+\usepackage[toc,page]{appendix}
+
+%\usepackage{setspace}
+%\doublespacing
+
+\def\sigmoidfigure
+{
+    \begin{tikzpicture}[trim axis left, trim axis right, baseline]
+        \begin{axis}[axis lines=none,width=2cm,height=2cm,
+                ylabel shift=-0.1cm]
+            \addplot[color=black]{1/(1+exp(-x))-2};
+        \end{axis}
+    \end{tikzpicture}
+}
+
+\def\tanhfigure
+{
+    \begin{tikzpicture}[trim axis left, trim axis right, baseline]
+        \begin{axis}[axis lines=none,width=2cm,height=2cm,
+                ylabel shift=-0.1cm]
+            \addplot[color=black]{(exp(2*x) -1)/(exp(2*x) + 1)};
+        \end{axis}
+    \end{tikzpicture}
+}
+
+
+\tikzset{
+    neuron/.style={circle,minimum size=29pt,inner sep=0pt, draw},
+    input neuron/.style={neuron},
+    output neuron/.style={neuron},
+    hidden neuron/.style={neuron,fill=black!25},
+    cell neuron/.style={neuron,fill=black!25},
+}
+
+% used to avoid putting the same thing several times...
+% Command \empt{var1}{var2}
+\newcommand{\empt}[2]{$#1^{\langle #2 \rangle}$}
+
+
+% Math
+\newcommand*{\doubletran}{^{\mkern-1.5mu\mathsf{T}^{\mkern-1.5mu\mathsf{T}}}}
+\newcommand*{\tran}{^{\mkern-1.5mu\mathsf{T}}}
+\newcommand*{\frob}{_{\mkern-1.5mu\mathsf{F}}} % Not used as alignment is off
+\newcommand\numeq[1]%
+  {\stackrel{\scriptscriptstyle#1}{=}}
+\allowdisplaybreaks
+
+% Typesetting
+\clubpenalty=10000
+\widowpenalty=10000
+
+\usepackage{float}
+
+\pdfsuppresswarningpagegroup=1
+
+% Figure <-> Text
+\setlength{\intextsep}{13pt plus 1.0pt minus 2.0pt}
+
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforechapskip}{6pt}

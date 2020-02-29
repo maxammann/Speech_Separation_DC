@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+    % Hidden cells
+    % Empty rectangle
+    \node[rectangle] (Y0) at (0, 0) {};
+    \node[cell neuron, right=2em of Y0] (RNN) {\sigmoidfigure};
+    % Empty rectangle
+    \node[rectangle, right=2em of RNN] (RNNHIDDEN) {};
+
+    % Input/Output neurons
+    \node[input neuron, below=of RNN] (X1) {$x^{(t)}$};
+    \node[output neuron, above left=of RNN] (Y2) {$\hat{y}_1^{(t)}$};
+    \node[output neuron, above right=of RNN] (Y3) {$\hat{y}_2^{(t)}$};
+
+    \node[rectangle, left=of Y2, text width=2.5cm] {Output Layer};
+    \node[rectangle, left=of RNN, text width=2.5cm] {Hidden Layer};
+    \node[rectangle, left=of X1, text width=2.5cm] {Input Layer};
+
+
+    \draw[-stealth, thick] (X1) -- (RNN);
+    \draw[-stealth, thick] (RNN) -- (Y2);
+    \draw[-stealth, thick] (RNN) -- (Y3);
+
+    %  Dotted arrows
+    \draw[-stealth, thick, densely dotted] (Y0) -- (RNN);
+    \draw[-stealth, densely dotted, thick] (RNN) -- (RNNHIDDEN);
+\end{tikzpicture}

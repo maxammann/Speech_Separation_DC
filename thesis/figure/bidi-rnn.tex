@@ -1,0 +1,83 @@
+\begin{tikzpicture}
+    % Hidden cells
+    % Empty rectangle
+    \node[rectangle] (Y0) at (0, 0) {};
+    \node[cell neuron, right=2em of Y0] (RNN) {\sigmoidfigure};
+    \node[cell neuron, right=of RNN] (RNN2) {\sigmoidfigure};
+    \node[cell neuron, right=of RNN2] (RNN3) {\sigmoidfigure};
+    \node[cell neuron, right= of RNN3] (RNN4) {\sigmoidfigure};
+    % Empty rectangle
+    \node[rectangle, right=2em of RNN4] (RNN5) {};
+
+    \node[cell neuron, above=of RNN4] (R25) {\sigmoidfigure};
+    \node[cell neuron, left=of R25] (R24) {\sigmoidfigure};
+    \node[cell neuron, left=of R24] (R23) {\sigmoidfigure};
+    \node[cell neuron, left=of R23] (R22) {\sigmoidfigure};
+    % Empty rectangle
+    \node[rectangle, left=2em of R22] (R21) {};
+    \node[right=2em of R25] (Y20) {};
+
+    % Input/Output neurons
+    \node[input neuron, below=of RNN] (X1) {$x^{(t-2)}$};
+    \node[input neuron, below=of RNN2] (X2) {$x^{(t-1)}$};
+    \node[input neuron, below=of RNN3] (X3) {$x^{(t)}$};
+    \node[input neuron, below=of RNN4] (X4) {$x^{(t+1)}$};
+    \node[output neuron, above=of R25] (Y5) {$y^{(t+1)}$};
+    \node[output neuron, above=of R24] (Y4) {$y^{(t)}$};
+    \node[output neuron, above=of R23] (Y3) {$y^{(t-1)}$};
+    \node[output neuron, above=of R22] (Y2) {$y^{(t-2)}$};
+
+    \node[rectangle, left=of RNN, text width=2.5cm] {Forward Layer};
+    \node[rectangle, left=of R22, text width=2.5cm] {Backward Layer};
+    \node[rectangle, left=of X1, text width=2.5cm] {Input Layer};
+    \node[rectangle, left=of Y2, text width=2.5cm] {Output Layer};
+
+    \draw[-stealth, thick] (X1) -- (RNN);
+    \draw[-stealth, thick] (X2) -- (RNN2);
+    \draw[-stealth, thick] (X3) -- (RNN3);
+    \draw[-stealth, thick] (X4) -- (RNN4);
+    \draw[-stealth, thick, densely dotted] (Y0) -- (RNN);
+    % Arrow labels between hidden cells
+    \draw[-stealth, thick] (RNN) -- node[above, pos=0.35] {} (RNN2);
+    \draw[-stealth, thick] (RNN2) -- node[above, pos=0.35] {} (RNN3);
+    \draw[-stealth, thick] (RNN3) -- node[above, pos=0.35] {} (RNN4);
+    \draw[-stealth, densely dotted, thick] (RNN4) -- (RNN5);
+
+    % Dots below input layer
+    %\node[below=4em of Y0] (d) {\dots};
+    %\node[below=4em of RNN5] (d) {\dots};
+
+    \path[-stealth, ultra thick, white] (X1) edge[bend left=45] (R22);
+    \path[-stealth, thick] (X1) edge[bend left=45] (R22);
+    \path[-stealth, ultra thick, white] (X2) edge[bend left=45] (R23);
+    \path[-stealth, thick] (X2) edge[bend left=45] (R23);
+    \path[-stealth, ultra thick, white] (X3) edge[bend left=45] (R24);
+    \path[-stealth, thick] (X3) edge[bend left=45] (R24);
+    \path[-stealth, ultra thick, white] (X4) edge[bend left=45] (R25);
+    \path[-stealth, thick] (X4) edge[bend left=45] (R25);
+    \draw[-stealth, densely dotted, thick] (Y20) -- (R25);
+
+    \draw[-stealth, thick] (R22) -- (Y2);
+    \draw[-stealth, thick] (R23) -- (Y3);
+    \draw[-stealth, thick] (R24) -- (Y4);
+    \draw[-stealth, thick] (R25) -- (Y5);
+
+    % Input arrows
+    \draw[stealth-, densely dotted, thick] (R21) -- (R22);
+    \draw[-stealth, densely dotted, thick] (Y20) -- (R25);
+    % Arrow labels between hidden cells
+    \draw[stealth-, thick] (R22) -- node[above, pos=0.65] {} (R23);
+    \draw[stealth-, thick] (R23) -- node[above, pos=0.65] {} (R24);
+    \draw[stealth-, thick] (R24) -- node[above, pos=0.65] {} (R25);
+
+
+    \path[-stealth, ultra thick, white] (RNN) edge[bend right=45] (Y2);
+    \path[-stealth, thick] (RNN) edge[bend right=45] (Y2);
+    \path[-stealth, ultra thick, white] (RNN2) edge[bend right=45] (Y3);
+    \path[-stealth, thick] (RNN2) edge[bend right=45] (Y3);
+    \path[-stealth, ultra thick, white] (RNN3) edge[bend right=45] (Y4);
+    \path[-stealth, thick] (RNN3) edge[bend right=45] (Y4);
+    \path[-stealth, ultra thick, white] (RNN4) edge[bend right=45] (Y5);
+    \path[-stealth, thick] (RNN4) edge[bend right=45] (Y5);
+
+\end{tikzpicture}

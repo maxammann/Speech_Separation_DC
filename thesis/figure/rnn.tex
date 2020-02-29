@@ -1,0 +1,45 @@
+\begin{tikzpicture}[node distance=0.5cm]
+    % Hidden cells
+    % Empty rectangle
+    \node[rectangle] (Y0) at (0, 0) {};
+    \node[cell neuron, right=2em of Y0] (RNN) {\sigmoidfigure};
+    \node[cell neuron, right=of RNN] (RNN2) {\sigmoidfigure};
+    \node[cell neuron, right=of RNN2] (RNN3) {\sigmoidfigure};
+    \node[cell neuron, right= of RNN3] (RNN4) {\sigmoidfigure};
+    % Empty rectangle
+    \node[rectangle, right=2em of RNN4] (RNN5) {};
+
+    % Input/Output neurons
+    \node[input neuron, below=of RNN] (X1) {$x^{(t-2)}$};
+    \node[input neuron, below=of RNN2] (X2) {$x^{(t-1)}$};
+    \node[input neuron, below=of RNN3] (X3) {$x^{(t)}$};
+    \node[input neuron, below=of RNN4] (X4) {$x^{(t+1)}$};
+    \node[output neuron, above=of RNN4] (Y5) {$y^{(t+1)}$};
+    \node[output neuron, above=of RNN3] (Y4) {$y^{(t)}$};
+    \node[output neuron, above=of RNN2] (Y3) {$y^{(t-1)}$};
+    \node[output neuron, above=of RNN] (Y2) {$y^{(t-2)}$};
+
+    \node[rectangle, left=of RNN, text width=2.5cm] {Hidden Layer};
+    \node[rectangle, left=of X1, text width=2.5cm] {Input Layer};
+    \node[rectangle, left=of Y2, text width=2.5cm] {Output Layer};
+
+    \draw[-stealth, thick] (X1) -- (RNN);
+    \draw[-stealth, thick] (X2) -- (RNN2);
+    \draw[-stealth, thick] (X3) -- (RNN3);
+    \draw[-stealth, thick] (X4) -- (RNN4);
+
+    \draw[-stealth, thick] (RNN) -- (Y2);
+    \draw[-stealth, thick] (RNN2) -- (Y3);
+    \draw[-stealth, thick] (RNN3) -- (Y4);
+    \draw[-stealth, thick] (RNN4) -- (Y5);
+
+
+    % Arrow labels between hidden cells
+    \draw[-stealth, thick] (RNN) -- (RNN2);
+    \draw[-stealth, thick] (RNN2) -- (RNN3);
+    \draw[-stealth, thick] (RNN3) -- (RNN4);
+
+    %  Dotted arrows
+    \draw[-stealth, thick, densely dotted] (Y0) -- (RNN);
+    \draw[-stealth, densely dotted, thick] (RNN4) -- (RNN5);
+\end{tikzpicture}

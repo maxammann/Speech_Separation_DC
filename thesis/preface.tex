@@ -1,0 +1,76 @@
+\pagestyle{empty}
+
+\begin{titlepage}
+	\centering
+	% \hfill\includegraphics[width=0.25\textwidth]{figure/Uni_Aug_Logo_Basis_pos_B}\par
+	\includegraphics[width=0.5\textwidth]{figure/Uni_Aug_Logo_Basis_pos_B}\par
+	% \includegraphics[width=0.20\textwidth]{figure/Uni_Aug_Logo_Basis_pos_C.eps}\par
+	\vspace{1cm}
+	% {\scshape\LARGE University of Augsburg \par}
+	{\scshape\large Chair of Embedded Intelligence for Health Care and Wellbeing \par}
+	{Univ.-Prof. Dr.-Ing. habil. Bj{\"o}rn \textsc{Schuller} \par}
+	\vspace{2.5cm}
+	{\scshape\LARGE Bachelor Thesis \par}
+	\vspace{1.0cm}
+	{\Huge\bfseries Speech Separation using\\Deep Clustering \par}
+	\vspace{3.0cm}
+	{\Large Maximilian \textsc{Ammann} \par}
+	{Matrikel-Nr.: 1471541 \par}
+	\vfill
+
+	supervised by Shuo \textsc{Liu}
+
+	\vspace{2cm}
+
+	% Bottom of the page
+	{\large October 14, 2019\par}
+\end{titlepage}
+
+\topmargin5mm
+\textheight220mm
+
+\small
+
+\begin{abstract}
+
+	\begin{center}
+		%\normalsize \textbf{Abstract}\\
+	\end{center}
+
+	% What is speech separation?
+	Speech separation is the task of separating the voices of concurrently speaking persons.
+	Compared to traditional signal processing approaches Deep Clustering presents a data-driven method which outperforms the classical ones.
+
+	% DC and what are the key points of it
+	In Deep Clustering, a recurrent neural network is trained to embed each time-frequency bin of a monaural speech spectrum into a high-dimensional space. The affinity of these embedding vectors in the target space is exploited to segment the spectrogram using k-means clustering. Vectors with low distance between each other belong to the same speaker. Therefore, the segmented clusters allow to create a spectrum mask for each speaker. Additionally, the mask is applied to the mixture in order to separate the voices. Finally, the time-domain speech signal is reconstructed.
+	The approach offers speaker-independent separation and achieves an \acrlong{sdr} of 8.89 on the high fidelity TIMIT data set.
+
+	% What was the goal of this thesis? Adaptability and Reproducability
+	In the thesis, experiments were conducted to find out whether the evaluation results of the original Deep Clustering paper hold true for different data sets which were not recorded under laboratory conditions.
+	Therefore, the algorithm has been evaluated on various data sets, namely WSJ0, TIMIT and the freely available TEDLIUM, in order to determine its adaptability to varying grades of quality.
+	Furthermore, the thesis states the stages of Deep Clustering precisely and presents a free and open source implementation.
+
+	% What are the findings?
+	The findings include that the quality of separation suffers from noise in the training and evaluation data set. In contrast, unknown speakers do not affect the success to the same extent.
+	These results illustrate how important the data set is, and hence more research is needed on preparing real-world data.
+
+	% What was additionally done? Visualizations
+	For this reason two methods for visualizing the embedding vectors were introduced. The first illustration uses the linear dependence between the vectors whereas the second selects different orders for clustering to draw a conclusion about the success of Deep Clustering.
+
+\end{abstract}
+
+\thispagestyle{empty}
+\pagestyle{empty}
+\pagenumbering{gobble}
+
+\tableofcontents
+\cleardoublepage
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+\addcontentsline{toc}{chapter}{Abbreviations}
+\setglossarystyle{alttree}
+\glssetwidest{xxxxxxxxx}
+\printglossary[type=\acronymtype,title={Abbreviations},nonumberlist,nopostdot]
+\cleardoublepage

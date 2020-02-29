@@ -1,0 +1,17 @@
+{
+    "batch_size": 128,
+    "embedding_dimension": 45,
+    "hop_length": 64,
+    "learning_rate": 1e-03,
+    "max_steps": 40000,
+    "n_hidden": 600,
+    "n_layers": 4,
+    "sampling_rate": 8000,
+    "threshold": 40, 
+    "train_dropout_ff": 0.5,
+    "train_dropout_rc": 0.2,
+    "window_size": 256,
+    "windows_per_sample": 100,
+    "dataset_mean": -43.115990,
+    "dataset_std": 15.164207 
+}

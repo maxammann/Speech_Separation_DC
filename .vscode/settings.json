@@ -1,0 +1,19 @@
+{
+    "spellright.language": [
+        "en_US"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "plaintext",
+        "latex"
+    ],
+    "latex-workshop.latex.outDir": "%DIR%/build",
+    "latex-workshop.view.pdf.viewer": "tab",
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent",
+    "python.formatting.autopep8Args": [
+        "--max-line-length=200"
+    ],
+    "python.pythonPath": "./venv/bin/python3.7",
+    "workbench.colorTheme": "Default Light+"
+}
