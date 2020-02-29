@@ -1,0 +1,26 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{tabular}{llcccccccc}
+        \multicolumn{2}{l}{Metric} & baseline               \tabularnewline
+        \midrule
+        & train time & 19:18h \tabularnewline
+        \midrule
+        \multirow{2}{*}{loss}                & train & 1759 \tabularnewline
+        & eval & 1590 \tabularnewline
+        \midrule
+        \multirow{6}{*}{\shortstack{SDR\\in $\text{dB}$}}                 & TIMIT (train)                       & 6.03   \tabularnewline
+        & TIMIT (eval)                       & 6.03
+                                             & 2.68    \tabularnewline
+        & WSJ0 (train)                       & 3.99 \tabularnewline
+        & WSJ0 (eval)                        & 4.32 \tabularnewline
+        & TEDLIUM (train)                    & 1.49 \tabularnewline
+        & TEDLIUM (eval)                     & 1.27  \tabularnewline
+    \end{tabular}
+    %    \caption{Evaluation results of the baseline model.}
+\end{document}

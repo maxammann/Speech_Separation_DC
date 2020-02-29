@@ -1,0 +1,28 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{tabular}{llcccccccc}
+        \multicolumn{2}{l}{Parameter/Metric} & 1a         & 1c        & 1d        & 1e        & 1f        & 1g        & 1h        & 1i \tabularnewline
+        \midrule
+        & $\eta$     & $10^{-3}$ & $10^{-7}$ & $10^{-3}$ & $10^{-5}$ & $10^{-7}$ & $10^{-3}$ & $10^{-5}$          & $10^{-7}$ \tabularnewline
+        & train data & A         & A         & B         & B         & B         & C         & C                  & C \tabularnewline
+        \midrule
+        & train time & 19:25h    & 19:15h    & 18:12h    & 18:10h    & 18:04h    & 18:10h    & 18:01h             & 18:03h \tabularnewline
+        \midrule
+        \multirow{2}{*}{loss}                & train      & \bf1275   & 4280      & 1384      & 1985      & 4452      & 2520      & 3301               & 7410 \tabularnewline
+        & eval       & \bf1137   & 2682      & 1389      & 2033      & 3108      & 3059      & 3669               & 4800\tabularnewline
+        \midrule
+        \multirow{6}{*}{\shortstack{SDR\\in dB}}                 & A (train)      & \bf8.59 & 1.29      & 7.89          & 4.57      & 1.57      & 4.43          & 1.96               & 2.36 \tabularnewline
+        & A (eval)   & \bf3.60   & 1.43      & 2.55      & 2.93      & 1.08      & 2.49      & 1.52               & 1.74 \tabularnewline
+        & B (train)  & 7.50      & 0.38      & \bf8.83   & 6.12      & 0.69      & 3.74      & 1.19               & 1.34 \tabularnewline
+        & B (eval)   & 7.34      & 0.74      & \bf8.89   & 5.69      & 1.29      & 3.50      & 1.50               & 2.03 \tabularnewline
+        & C (train)  & 2.59      & 0.74      & 2.30      & 0.81      & 1.07      & \bf5.37   & 1.63               & 1.40 \tabularnewline
+        & C (eval)   & 2.66      & 0.35      & 2.45      & 1.17      & 0.68      & \bf4.67   & 1.28               & 0.48 \tabularnewline
+    \end{tabular}
+%    \caption{Evaluation results for adjusting the learning rate. 1b is left out as it corresponds to the baseline in Table \ref{table.eval.baseline}.}
+\end{document}

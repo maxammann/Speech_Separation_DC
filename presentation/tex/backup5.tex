@@ -1,0 +1,29 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{tabular}{llcccccccc}
+        \multicolumn{2}{l}{Parameter/Metric} & 5a             & 5b            & 5c \tabularnewline
+        \midrule
+        & dropout        & (0 0)         & (0 0)              & (0 0) \tabularnewline
+        & train data & A             & B                  & C \tabularnewline
+        \midrule
+        & train time     & 19:13h        & 18:02h             & 17:59h \tabularnewline
+        \midrule
+        \multirow{2}{*}{loss}                & train          & \textbf{1909} & 2152               & 3411 \tabularnewline
+        & eval           & \textbf{1722} & 2180               & 3668 \tabularnewline
+        \midrule
+        \multirow{6}{*}{\shortstack{SDR\\in dB}}                 & A (train)      & \bf5.59       & 4.48               & 0.77 \tabularnewline
+        & A (eval)       & 2.67          & \bf2.71            & -0.16 \tabularnewline
+        & B (train)      & 4.08          & \bf5.95            & 0.24 \tabularnewline
+        & B (eval)       & 4.43          & \bf5.71            & 0.51 \tabularnewline
+        & C (train)      & 1.07          & 1.21               & \bf1.81 \tabularnewline
+        & C (eval)       & 1.74          & \bf1.94            & 1.63 \tabularnewline
+    \end{tabular}
+%    \caption{Evaluation results for adjusting the dropout.}
+%    \label{table.eval.dropout}
+\end{document}

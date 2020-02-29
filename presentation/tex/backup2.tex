@@ -1,0 +1,30 @@
+\documentclass[convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false,border={1cm 1cm 1cm 1cm}]{standalone}
+
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{tabular}{llcccccccc}
+        \multicolumn{2}{l}{Parameter/Metric} & 2a              & 2b     & 2d \tabularnewline
+        \midrule
+        & $n_{hidden}$    & 50     & 300                & 900 \tabularnewline
+        & $n_{recurrent}$ & 4      & 4                  & 2 \tabularnewline
+        & train data  & A      & A                  & A \tabularnewline
+        \midrule
+        & train time      & 13:38h & 13:47h             & 15:52h \tabularnewline
+        \midrule
+        \multirow{2}{*}{loss}                & train           & 2295   & 2014               & \textbf{1865} \tabularnewline
+        & eval            & 2073   & 1749               & \textbf{1659} \tabularnewline
+        \midrule
+        \multirow{6}{*}{\shortstack{SDR\\in dB}}                 & A (train)       & 1.60   & 4.42               & \bf5.79 \tabularnewline
+        & A (eval)        & -0.12  & 1.68               & \bf2.78 \tabularnewline
+        & B (train)       & 1.35   & 3.11               & \bf4.28 \tabularnewline
+        & B (eval)        & 1.35   & 3.22               & \bf4.48 \tabularnewline
+        & C (train)       & 0.35   & 0.67               & \bf1.26 \tabularnewline
+        & C (eval)        & 0.36   & 0.77               & \bf1.60 \tabularnewline
+    \end{tabular}
+%    \caption{Evaluation results for adjusting the amount of hidden units. 2c is left out as it would correspond to the baseline in Table \ref{table.eval.baseline}.}
+%    \label{table.eval.hidden-units}
+\end{document}

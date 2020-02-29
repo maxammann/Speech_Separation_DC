@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Slides</title>
+</head>
+<body>
+
+<div class="reveal">
+
+    <div id="hidden" style="display:none;">
+        <div id="header">
+            <div id="footer-left">
+                <div id="logo"></div>
+            </div>
+            <div id="footer-right">
+                <div id="logo-eihw"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slides">
+
+        <section>
+            <div style="display: flex; flex-direction: column; justify-content: space-between; min-height: 400px; align-content: space-between; width: 100%">
+                <div style="text-align: center">
+                    <div><h1>Speech Separation</h1></div>
+                    <div><h2>using Deep Clustering</h2></div>
+                </div>
+
+                <div style="font-variant: small-caps;align-self: flex-start;display: flex; justify-content: space-between; width: 100%">
+                    <div>
+                        Maximilian Ammann
+                    </div>
+                    <div>
+                        Supervisor: Shuo Liu
+                    </div>
+                </div>
+            </div>
+
+            <aside class="notes">
+                Hello, I'm Max Ammann and I'm pleased to present you my Bachelor Thesis about "Speech Separation using Deep Clustering today.
+                As I'm having last talk before lunch I'll start right away.
+            </aside>
+        </section>
+
+
+        <!--Introduction-->
+
+        <section>
+            <h2>Motivation for Speech Separation</h2>
+
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <div style="flex-basis: 50%;">
+                    <div>
+                        <video src="content/figures/star_trek.mp4" controls
+                               style="max-width: 100%"></video>
+                        <div class="source-caption">Source: Star Trek: The Next Generation, 5x28: Déjà Vu</div>
+                    </div>
+                </div>
+
+                <div class="fragment" style="flex-basis: 50%; font-size: 20px">
+                    <div data-markdown>
+                        * Separating a speech mixture into multiple speech segments that belong to different speakers
+                        * Challenge lies in separating a mixture which consists of sources of the same domain and from
+                        unknown speakers
+                        <!-- * Address the "Permutation Problem"
+                        * Also known as the "Cocktail Party Problem" -->
+                    </div>
+                </div>
+            </div>
+
+            <aside class="notes">
+                <div data-markdown>
+                    * NMF (Non-negative Matrix Factorization) and ICA (Independent component analysis) are linear and
+                    therefore not equally powerful compared to DNNs
+                    * Approaches with DNNs/RNNs which estimate the Spectrum directly suffer from Label Permutation
+                    problem
+                </div>
+            </aside>
+        </section>
+
+        <section>
+            <h2>Framework</h2>
+            <div style="display: flex; justify-content: center; flex-direction: column; width: 100%">
+                <div style="align-self: center; text-align: end; width: 100%">
+                    <img style="width: 100%;margin-right: 100px; margin-top: -35px;" class="plain"
+                         src="content/figures/overview.svg">
+                </div>
+            </div>
+
+            <aside class="notes">
+                <div data-markdown>
+                    * Feature Extraction: Creating the input features for the neural network. The input mixture is
+                    transformed using STFT
+                    * RNN: Calculates for each time-frequency bin a -dimensional vector using a RNN
+                    * Clustering: Determines the centers of the resulting clusters in the embedding space
+                    * Creation of Mask: Mask is calculated by using the label information retrieved from clustering
+                    * Waveform Reconstruction: **Only the amplitude information of the STFT**
+                </div>
+                <div data-markdown>
+                    * $n_{recurrent}$ LSTM hidden layers with $n_{hidden}$ hidden units
+                    * single fully-connected layer with $\tanh$ as activation function
+                    * Dropouts are applied on the forward and backwards layers of the RNN
+                    * LSTMs are beneficial in comparision to GRUs (conducted experiment)
+                </div>
+            </aside>
+        </section>
+
+        <section>
+            <!--1:30min-->
+            <h2>Training the RNN</h2>
+
+            <div data-markdown>
+                In order to train an RNN which produces similar embeddings for the same speaker we minimize:
+            </div>
+
+            <div style="margin-top: 50px">
+                <div style="text-align: end; margin-bottom: 20px; font-weight: bold">
+                    <div class="fragment" data-fragment-index="0">
+                    </div>
+                    <div class="fragment math-highlight" data-fragment-index="1">
+                        Pulls embeddings of the same class closer together
+                    </div>
+                </div>
+
+                <div>
+                    $
+                    J(Y, V) = || VV^{\mkern-1.5mu\mathsf{T}} - YY^{\mkern-1.5mu\mathsf{T}} ||^2_F =
+                    \texfragment[index=0]{
+                    \sum_{\substack{i=0,j=0 \\ y_i = y_j}} \left(
+                    \texapply[class=math-highlight, index=1]{| v_i - v_j |^2 - 1}
+                    \right) + \sum_{i=0,j=0} (
+                    \texapply[class=math-highlight-alt, index=2]{v_i^{\mkern-1.5mu\mathsf{T}} v_j}
+                    )\texapply[class=math-highlight-alt, index=2]{^2}
+                    }
+                    $
+
+                    <!--                    $J(Y, V) = || VV^{\mkern-1.5mu\mathsf{T}} - YY^{\mkern-1.5mu\mathsf{T}} ||^2_F$-->
+                </div>
+
+                <div style="text-align: end; margin-top: 10px; font-weight: bold">
+                    <div class="fragment math-highlight-alt" data-fragment-index="2">
+                        Pushes embeddings of the different classes apart
+                    </div>
+                </div>
+
+                <div data-markdown style="margin-top: 10px;">
+                    * $VV^{\mkern-1.5mu\mathsf{T}} \in \mathbb{R}^{p \times p}$ is the estimated affinity matrix
+                    * $YY^{\mkern-1.5mu\mathsf{T}} \in \mathbb{R}^{p \times p}$ is the ideal affinity matrix
+                </div>
+            </div>
+
+            <div class="fragment">
+
+                <div data-markdown style="margin-top: 50px">
+                    As the matrix $VV^{\mkern-1.5mu\mathsf{T}}$ consumes a lot of resources the above equation is
+                    simplified as a low rank form:
+                </div>
+                <div style="text-align: center;">
+                    $J(Y, V) = || V^{\mkern-1.5mu\mathsf{T}} V ||^2_F - 2 || V^{\mkern-1.5mu\mathsf{T}} Y||^2_F + ||
+                    Y^{\mkern-1.5mu\mathsf{T}} Y||^2_F$
+                </div>
+            </div>
+
+
+            <aside class="notes">
+                <div data-markdown>
+                    * V contains the embeddings for each tf e.g. [0.1,0.3,0.6] for three speakers
+                    * Y contains a one hot vector for each tf e.g. [0,0,1] for three speakers
+                </div>
+            </aside>
+        </section>
+
+        <!--Clustering -->
+        <section>
+            <!--30s-->
+            <h2>Clustering</h2>
+
+            <div>
+                $k$-Means is used to cluster the learnt embedding vectors.
+            </div>
+
+            <div class="fragment">
+                <div data-markdown>
+                    The loss function of $k$-means adapted to our task is
+                </div>
+
+                <div style="text-align: center">
+                    $\gamma=\sum_{i=0}^{p} \sum_{j=0}^{k} b_{ij} ||v_i - c_j||^2 = ||V-BM||_F^2$
+                </div>
+
+                <div style="margin-top: 40px">
+                    where:
+                </div>
+                <ul class="math-list">
+                    <li>
+                        $B \in \mathbb{R}^{p \times k}$ with $b_{ij}=\begin{cases}
+                        1 & \text{if $v_i$ is estimated to belong to speaker $j$} \\\\
+                        0 & \text{otherwise}
+                        \end{cases}$,
+                    </li>
+                    <li>
+                        $v_i \in V$,
+                    </li>
+                    <li>
+                        $c_j$ is the center of the cluster for speaker $j$ and
+                    </li>
+                    <li>
+                        $M=(Y^{\mkern-1.5mu\mathsf{T}} Y)^{-1}Y^{\mkern-1.5mu\mathsf{T}} V$.
+                    </li>
+                </ul>
+
+            </div>
+
+            <div data-markdown class="fragment boxed">
+                The training objective $J(Y, V)$ and the $k$-means objective $\gamma$ are small, then
+                $VV^{\mkern-1.5mu\mathsf{T}} \approx YY^{\mkern-1.5mu\mathsf{T}}$ which leads to $B \approx Y$
+            </div>
+
+            <aside class="notes">
+                <div data-markdown>
+                    * Lloyd Algorithm is used
+                    * Clustering can be performed locally or globally
+                    * Clustering approach solves label permutation problem: New embeddings from the network are
+                    clustered in the same context -> It is clear which ft belongs to which speaker
+                    - Problematic if the mask directly estimated by an DDN
+                </div>
+
+                <div data-markdown>
+                    p=((M/2))+1) * b_s * #_w
+                </div>
+            </aside>
+        </section>
+
+
+        <section>
+            <!--30s-->
+            <h2>Waveform Reconstruction</h2>
+
+            <div data-markdown>
+                The matrix $B \in \mathbb{R}^{p \times k}$ from the clustering step can be interpreted as binary mask:
+            </div>
+            <div style="text-align: center; width: 100%">
+                $\mathrm{IBM}_j(t, f)=b_{t(\frac{M}{2}+1)+f,j}$
+            </div>
+            <div class="fragment">
+                <div data-markdown class="boxed">
+                    The spectrum of an individual speaker can be obtained by multiplying the spectrum of the mixture
+                    with the $\mathrm{IBM}$:
+                    $\tilde{S}_j(t,f)=\mathrm{IBM}_j(t,f) \cdot S(t,f)$
+                </div>
+
+                <div data-markdown>
+                    With the phase information of the original signal we reconstruct the speech signal $x_j(n)$ using
+                    the inverse STFT and the the overlap-add approach.
+                </div>
+            </div>
+
+            <!-- TODO: The \gls{dc} method assumes that in each time-frequency bin exactly one voice is
+                dominant. Therefore, each bin can be assigned to one of $k$ sources. For each speaker $0 \le i < k$ a
+                mask $M_i$ is constructed in such a way that its multiplication with the spectrum of the mixture yields
+                the estimated speech signal of the $i$-th speaker.
+                One might say that calculating the mask is like adding another dimension to the time-frequency
+                representation. In addition to the time and frequency dimension, a new dimension is added which denotes
+                the belonging to a specific source.-->
+
+            <!-- TODO: In the case of speech the amplitudes are more important than the phase.
+                Because of that, it is sufficient to use the phase information from the mixture, even though
+                reconstructing the phase could improve the overall performance~\cite[p.11]{Wang2018b}.
+                To get a discrete signal from the time-frequency representation the inverse \gls{stft} is used.
+                Apart from numerical errors, there is no error introduced from the inverse \gls{stft} of the unmodified
+                frequency representation from the mixture. Because the window which was used when extracting the
+                features fulfills the \gls{cola} criterion, the numerical errors are negligible.
+                In conclusion, the quality of the mask is responsible for the success of the source separation. -->
+
+            <!--TODO:Waveform Reconstruction-->
+        </section>
+
+
+        <!--Results-->
+        <!--10min-->
+        <section>
+            <h2>Experiments</h2>
+
+            <div>
+                <div>
+                    <div data-markdown style="text-align: start">
+                        **Data**
+
+                        Three data sets are used to test the DC algorithm, each containing 30h training and 5h
+                        evaluation data:
+                        * TIMIT [54] (Texas Instruments + MIT) and WSJ0 [55] (Wall Street Journal), which contain
+                        professional
+                        audio
+                        recordings
+                        * TEDLIUM [56], which contains recordings of TED talks with varying quality.
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 40px">
+
+
+                    <div data-markdown style="text-align: start">
+                        **Metrics:**
+
+                        * ISR (Image to Spatial Distortion Ratio)
+                        * SIR (Source to Interference Ratio)
+                        * SAR (Source to Artifact Radio)
+                        * SDR (Source to Distortion Ratio) which combines the above three
+                    </div>
+                </div>
+            </div>
+
+            <aside class="notes">
+                The original paper on DC from Hershey et al. [1] acts as a baseline.
+            </aside>
+        </section>
+        <section>
+            <h2>Hyperparameters</h2>
+
+            <div style="width: 100%">
+                <!--                In order to optimize the network, multiple hyperparameters have been evaluated empirically:-->
+                <img style="width: 100%" class="plain" src="content/figures/hyperparameters.svg">
+            </div>
+
+
+        </section>
+        <section>
+            <h2>Experiments</h2>
+            <div style="justify-content: center; display: flex; width: 100%">
+                <img style="width: 100%" class="plain" src="content/figures/sdrs.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Experiment results for adjusting the learning rate.
+            </div>
+        </section>
+        <section>
+            <h2>Performance A</h2>
+
+            <div style="display: flex; align-content: start; flex-wrap: wrap; width: 100%">
+                <div style="flex: 100%" id="playback-mix">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 50%" id="playback-source1">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 50%" id="playback-source2">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="width: 100%" class="caption">
+                Example inference on the WSJ0 data set with a <b>male</b> and a <b>female</b> speaker.
+            </div>
+        </section>
+
+
+        <section>
+            <h2>Performance B</h2>
+
+            <div style="display: flex; align-content: start; flex-wrap: wrap; width: 100%">
+                <div style="flex: 100%" id="playback-timit-mix">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 50%" id="playback-timit-source1">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 50%" id="playback-timit-source2">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="width: 100%" class="caption">
+                Example inference on the TIMIT data set with <b>two female</b> speakers.
+            </div>
+        </section>
+
+        <section>
+            <h2>Performance C</h2>
+
+            <div style="display: flex; align-content: start; flex-wrap: wrap; width: 100%">
+                <div style="flex: 100%" id="playback-tedlium-mix">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 50%" id="playback-tedlium-source1">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 50%" id="playback-tedlium-source2">
+                    <div class="playback-wrapper">
+                        <div class="timeline"></div>
+                        <div class="spec"></div>
+                        <button class="playpause">
+                            <i class="fa fa-play"></i> /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="width: 100%" class="caption">
+                Example inference on the noisy TEDLIUM data set with <b>two male</b> speakers.
+            </div>
+        </section>
+
+        <section>
+            <h2>Are there concurrently speaking people?</h2>
+
+            <div class="fragment">
+                <div data-markdown>
+                    **⇒ Speaker count detection using Order Selection**
+                </div>
+
+                <div data-markdown>
+                    Main approaches:
+
+                    * Determine the distance between the two centers
+                    * Calculate Within Cluster Error (WCE)
+                </div>
+            </div>
+
+            <aside class="notes">
+                WCE = sum of distances between data samples and their associated cluster centers.
+            </aside>
+
+        </section>
+        <section>
+            <h2>Order Selection</h2>
+            <div style="width: 100%" class="images-text">
+                <div style="justify-content: center; display: flex; width: 100%">
+
+                    <img style="width: 50%" class="plain" src="content/figures/elbow/centers_1.svg">
+
+                </div>
+                <div style="width: 100%" class="caption">
+                    (a) Euclidean distance between two centers of the clusters for $k = 2$.
+                </div>
+            </div>
+
+
+            <div style="width: 100%" class="images-text">
+                <div style="justify-content: center; display: flex; width: 100%">
+
+                    <img style="width: 50%" class="plain" src="content/figures/elbow/scores_1.svg">
+
+                </div>
+                <div style="width: 100%" class="caption">
+                    (b) The WCE of a speech signal for $k \in \{1,2\}$.
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Visualisation of Clustering</h2>
+
+            <div style="justify-content: center; display: flex; width: 100%">
+                <video src="content/figures/visualisation.mp4" data-autoplay loop
+                       style="height: 500px; max-width: 100%"></video>
+            </div>
+        </section>
+
+
+        <!--Outro-->
+        <!--0min-->
+        <!--        Black Slide-->
+        <!--        <section data-background="#000000">-->
+        <!--        </section>-->
+        <section>
+            <h2>Conclusion and Outlook</h2>
+
+            <div data-markdown>
+                * Trained a RNN to produce similar embeddings for TF-bins which belong to the same speaker
+                * Separation performance suffers from noise in data sets but is speaker independent
+                * Order Selection is exploited to detect the existence of overlapping speech
+                * The process of clustering the learned embeddings via k-means is visualized
+            </div>
+
+            <ul class="contact-list">
+                <li><i class="far fa-envelope"></i> <a
+                        href="https://maxammann.org/contact">maxammann.org/contact</a></li>
+                <li><i class="fas fa-code"></i> <a href="https://github.com/maxammann">github.com/maxammann</a></li>
+            </ul>
+
+            <aside class="notes">
+                The embedding generator in DC has the potential to be used in more tests such as:
+                * Speaker diarization
+                * identification etc.
+
+                Robust clustering methods need to be investigated to improve clustering performance. Especially in case
+                of strong noise.
+            </aside>
+        </section>
+
+        <!--References-->
+        <!--0min-->
+        <section data-external="content/biblography.html"></section>
+        <section data-external="content/biblography1.html"></section>
+        <section data-external="content/biblography2.html"></section>
+        <section data-external="content/biblography3.html"></section>
+        <section data-external="content/biblography4.html"></section>
+        <section data-external="content/biblography5.html"></section>
+        <section data-external="content/biblography6.html"></section>
+
+        <!--Backup Slides-->
+        <section>
+            <h1>Backup Slides</h1>
+        </section>
+        <section>
+            <h2>K-Means</h2>
+
+            <div data-markdown>
+                The goal of k-means is to cluster the vector set $\mathcal{X} \subset \mathbb{R}^d$ of $n$ vectors given
+                an integer $k$ which denotes the amount of expected partitions. The result of this operation is a set
+                $\mathcal{C} \subset \mathbb{R}^d$ of $k$ centers. Like neural networks this algorithm also includes a
+                loss function which is the target for optimization:
+
+                $\gamma=\sum_{x \in \mathcal{X}} \min_{c \in \mathcal{C}} ||x-c||^2$
+
+                The objective is to minimize for each $x \in X$ the distance to its nearest center.
+            </div>
+        </section>
+        <section>
+            <h2>Order Selection $k=1$</h2>
+            <div style="width: 100%" class="images-text">
+                <div style="justify-content: center; display: flex; width: 100%">
+
+                    <img style="width: 50%" class="plain" src="content/figures/elbow/centers_1_alt.svg">
+
+                </div>
+                <div style="width: 100%" class="caption">
+                    (a) The plot shows the Euclidean distance between the origin and the center for $k = 1$, as well as
+                    the distance between the two clusters for $k = 2$.
+                </div>
+            </div>
+        </section>
+        <section>
+            <div style="justify-content: center; display: flex; width: 100%">
+                <img style="width: 50%" class="plain" src="content/figures/backup.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Evaluation results of the baseline model.
+            </div>
+        </section>
+        <section>
+            <div style="width: 100%">
+                <img style="width: 100%" class="plain" src="content/figures/backup1.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Evaluation results for adjusting the learning rate.
+            </div>
+        </section>
+        <section>
+            <div style="justify-content: center; display: flex; width: 100%">
+                <img style="width: 50%" class="plain" src="content/figures/backup2.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Evaluation results for adjusting the amount of hidden units.
+            </div>
+        </section>
+        <section>
+            <div style="justify-content: center; display: flex; width: 100%">
+                <img style="width: 50%" class="plain" src="content/figures/backup3.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Evaluation results for adjusting the batch size.
+            </div>
+        </section>
+        <section>
+            <div style="justify-content: center; display: flex; width: 100%">
+                <img style="width: 50%" class="plain" src="content/figures/backup4.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Evaluation results for adjusting the embedding dimension.
+            </div>
+        </section>
+        <section>
+            <div style="justify-content: center; display: flex; width: 100%">
+                <img style="width: 50%" class="plain" src="content/figures/backup5.svg">
+            </div>
+            <div class="caption" style="width: 100%; text-align: center">
+                Evaluation results for adjusting the dropout.
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
