@@ -71,3 +71,23 @@ def eval_generated(model_dir, config, generated_mixtures, window_size=1.0, hop_l
     #session.close()
 
     return eval_results, mixes, reference, labels, ret_sources
+
+
+def generate(model_dir, config, generated_mixtures, debug=False):
+    sampling_rate = config.sampling_rate
+    mixes, reference, labels = generated_mixtures
+    eval_results = []
+    ret_sources = []
+
+    inference = Inference(config)
+    
+    session, embedding_model, in_data, in_data, dropout_ff, dropout_rc = inference.prepare_session(model_dir, debug)
+    
+    for mix, ref, label in zip(mixes, reference, labels):
+        embeddings, N_samples = inference.estimate_embeddings(session, mix, embedding_model, in_data, dropout_ff, dropout_rc)
+        sources = inference.estimate_sources(mix, embeddings, N_samples, ref)
+
+        eval_results.append((result, None, None))
+        ret_sources.append(sources)
+
+    return eval_results, mixes, reference, labels, ret_sources
