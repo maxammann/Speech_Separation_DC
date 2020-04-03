@@ -5,7 +5,7 @@ Class DataGenerator:
 '''
 import numpy as np
 import librosa
-import pickle
+import hickle
 from numpy.lib import stride_tricks
 import os
 
@@ -22,7 +22,7 @@ class DataGenerator(object):
 
         # read in all the .pkl files
         for pkl in pkl_list:
-            self.samples.extend(pickle.load(open(pkl, 'rb')))
+            self.samples.extend(hickle.load(open(pkl, 'rb')))
         self.tot_samp = len(self.samples)
         print("Loaded %d samples into memory." % self.tot_samp)
         np.random.shuffle(self.samples)

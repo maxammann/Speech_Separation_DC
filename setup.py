@@ -14,6 +14,7 @@ setup(
         'museval',
         'scikit-learn==0.20.3',
         'numpy==1.16.3',
-        'tensorflow==1.13.1'
+        'tensorflow==1.13.1',
+        'hickle'
     ]
 )

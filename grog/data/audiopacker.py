@@ -4,7 +4,7 @@ Script using PackData to generate .pkl format datasets
 '''
 import numpy as np
 import librosa
-import pickle
+import hickle
 from numpy.lib import stride_tricks
 import os
 import argparse
@@ -79,7 +79,7 @@ class PackData(object):
             except KeyboardInterrupt:
                 break
 
-        pickle.dump(samples, open(self.output, 'wb'))
+        hickle.dump(samples, open(self.output, 'wb'))
 
     def create_random_pair(self):
         i = np.random.randint(self.n_speaker)

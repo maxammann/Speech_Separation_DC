@@ -3,7 +3,7 @@ from grog.models.infer import Inference
 from grog.config import Config
 from grog.evaluation.evaluate import generate
 from grog.evaluation.preparation import generate_mixtures
-import pickle
+import hickle
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("restore sound for each speaker")
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     def generate_eval_data(n, sample_dir, out):
         if os.path.isfile(out):
-            return pickle.load(open(out, "rb"))
+            return hickle.load(open(out, "rb"))
 
         sampling_rate = 8000
         print(out)
@@ -48,4 +48,4 @@ if __name__ == "__main__":
     eval_result = (config_path, config, "voxceleb", "voxceleb-set", generate(model_dir, config, voxceleb)) # TODO: Also store here evaluation results using eval_generated
 
     print("Dumping eval_result")
-    pickle.dump(eval_result, open(output, "wb"))
+    hickle.dump(eval_result, open(output, "wb"))
