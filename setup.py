@@ -6,5 +6,14 @@ setup(
     version='0.1.0',
     description='Bachelor thesis for speech separation (using deep-clustering)',
     author='maxammann',
-    license='MIT'
+    license='MIT',
+    install_requires=[
+        'librosa==0.6.3',
+        'scipy==1.4.1',
+        'matplotlib',
+        'museval',
+        'scikit-learn==0.20.3',
+        'numpy==1.16.3',
+        'tensorflow==1.13.1'
+    ]
 )
