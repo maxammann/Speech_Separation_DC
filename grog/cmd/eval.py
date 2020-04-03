@@ -48,4 +48,4 @@ if __name__ == "__main__":
     eval_result = (config_path, config, "voxceleb", "voxceleb-set", generate(model_dir, config, voxceleb)) # TODO: Also store here evaluation results using eval_generated
 
     print("Dumping eval_result")
-    hickle.dump(eval_result, open(output, "wb"))
+    hickle.dump(eval_result, open(output, "wb"), compression='gzip')
