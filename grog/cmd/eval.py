@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     def generate_eval_data(n, sample_dir, out):
         if os.path.isfile(out):
-            return hickle.load(open(out, "rb"))
+            return hickle.load(out)
 
         sampling_rate = 8000
         print(out)
@@ -48,4 +48,4 @@ if __name__ == "__main__":
     eval_result = (config_path, config, "voxceleb", "voxceleb-set", generate(model_dir, config, voxceleb)) # TODO: Also store here evaluation results using eval_generated
 
     print("Dumping eval_result")
-    hickle.dump(eval_result, open(output, "wb"), compression='gzip')
+    hickle.dump(eval_result, output, compression='gzip')

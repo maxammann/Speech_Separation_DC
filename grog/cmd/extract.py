@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     print("Loading eval_result")
     # eval_result = (config_path, config, "voxceleb", set_name, eval_generated(model_dir, config, voxceleb))
-    config_path, config, name, set_name, eval_data  = hickle.load(open(eval_result, "rb"))
+    config_path, config, name, set_name, eval_data  = hickle.load(eval_result)
 
     print("config_path:\t%s" % config_path)
     print("config:\t%s" % config)

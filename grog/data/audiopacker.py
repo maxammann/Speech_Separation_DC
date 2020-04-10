@@ -79,7 +79,7 @@ class PackData(object):
             except KeyboardInterrupt:
                 break
 
-        hickle.dump(samples, open(self.output, 'wb'), compression='gzip')
+        hickle.dump(samples, self.output, compression='gzip')
 
     def create_random_pair(self):
         i = np.random.randint(self.n_speaker)

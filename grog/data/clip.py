@@ -58,4 +58,4 @@ def audio_clip_speaker(speaker_dir, N, low, high, duration, output_dir):
             # Use whole
             utterance = y
 
-        librosa.output.write_wav(os.path.join(p, str(j)) + ".wav", utterance, sampling_rate)
+        librosa.output.write_wav(os.path.join(p, str(j)) + ".wav", utterance, 8000)

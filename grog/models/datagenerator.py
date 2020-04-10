@@ -22,7 +22,7 @@ class DataGenerator(object):
 
         # read in all the .pkl files
         for pkl in pkl_list:
-            self.samples.extend(hickle.load(open(pkl, 'rb')))
+            self.samples.extend(hickle.load(pkl))
         self.tot_samp = len(self.samples)
         print("Loaded %d samples into memory." % self.tot_samp)
         np.random.shuffle(self.samples)
