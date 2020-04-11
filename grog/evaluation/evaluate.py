@@ -87,7 +87,7 @@ def generate(model_dir, config, generated_mixtures, debug=False):
         embeddings, N_samples = inference.estimate_embeddings(session, mix, embedding_model, in_data, dropout_ff, dropout_rc)
         sources = inference.estimate_sources(mix, embeddings, N_samples, ref)
 
-        eval_results.append((result, None, None))
+        eval_results.append((None, None, None))
         ret_sources.append(sources)
 
     return eval_results, mixes, reference, labels, ret_sources

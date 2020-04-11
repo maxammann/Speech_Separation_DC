@@ -12,6 +12,16 @@ if __name__ == "__main__":
     parser.add_argument("--low", type=float, help="starting time of the audio from which the clip is sampled", default=0)
     parser.add_argument("--high", type=float, help="(sample count - high) is the end of the audio from which the clip is sampled", default=600)
     parser.add_argument("--out", type=str, help="the output directory", required=True)
+    parser.add_argument("--config", type=str, help="the config", required=False)
     args = parser.parse_args()
 
-    clip(args.dir, args.num, args.low, args.high, args.duration, args.out)
+    config = Config()
+
+    if args.config:
+        config.load_json(args.config)
+    else:
+        config.load_constants()
+
+    config.print()
+
+    clip(args.dir, args.num, args.low, args.high, args.duration, args.out, config)
