@@ -6,22 +6,21 @@ import argparse
 import math
 from multiprocessing import Pool
 from grog.config import Config
-import soundfile as sf
 
 
-def clip(data_dir, N, low, high, duration, output_dir):
+def clip(data_dir, N, low, high, duration, output_dir, config):
     speakers_dirs = [os.path.join(data_dir, i) for i in os.listdir(data_dir)
                      if os.path.isdir(os.path.join(data_dir, i))]
 
     print("Speaker count: %s" % len(speakers_dirs))
     with Pool(processes=16) as pool:
         for speaker_dir in speakers_dirs:
-            pool.apply_async(audio_clip_speaker, (speaker_dir, N, low, high, duration, output_dir))
+            pool.apply_async(audio_clip_speaker, (speaker_dir, N, low, high, duration, output_dir, config))
         pool.close()
         pool.join()
 
 
-def audio_clip_speaker(speaker_dir, N, low, high, duration, output_dir):
+def audio_clip_speaker(speaker_dir, N, low, high, duration, output_dir, config):
     speaker = os.path.basename(speaker_dir)
     print("Speaker:\t%s" % speaker)
     #print("Source:\t%s" % speaker_dir)
@@ -42,20 +41,18 @@ def audio_clip_speaker(speaker_dir, N, low, high, duration, output_dir):
     for j in range(N):
         audio_file = np.random.choice(audio_files)
         #print("\t%s" % audio_file)
-        y, sampling_rate = sf.read(audio_file, dtype='float32')
+        y, sampling_rate = librosa.load(audio_file, sr=config.sampling_rate)
 
-        if len(y) > duration * sampling_rate:
+        if len(y) > duration * sampling_rate and len(y) - (low + high) * sampling_rate > 0:
             # Select randomly
-            k = int(
-                np.random.uniform(low,
+            k = int(np.random.uniform(low * sampling_rate,
                                   min(
-                                      (len(y) - high*sampling_rate) / sampling_rate,
-                                      (len(y) - duration*sampling_rate) / sampling_rate
+                                      len(y) - high*sampling_rate,
+                                      len(y) - duration*sampling_rate
                                   ), size=1))
-            utterance = y[k *
-                          sampling_rate: math.floor((k+duration)*sampling_rate)]
+            utterance = y[k:int(math.floor(k+duration*sampling_rate))]
         else:
             # Use whole
             utterance = y
 
-        librosa.output.write_wav(os.path.join(p, str(j)) + ".wav", utterance, 8000)
+        librosa.output.write_wav(os.path.join(p, str(j)) + ".wav", utterance, config.sampling_rate)
