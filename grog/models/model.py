@@ -115,21 +115,18 @@ class Model(object):
         Y_v = tf.reshape(
             Y_rsv, shape=[-1, self.windows_per_sample * self.ft_bins, 2])
 
-       
         mixed = tf.reshape(in_data, shape=[-1, self.windows_per_sample * self.ft_bins]) # X 
         S =  mixed * tf.transpose(Y_v, [2, 0, 1]) # S 
 
-        temp = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v)
-        print(temp.get_shape()) # (128, 45, 2)
-        print(tf.reduce_sum(temp, axis=[0]).get_shape()) # (45, 2)
-        print(tf.reduce_sum(Y_v, axis=[2]).get_shape()) # (2,)
+        #temp = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v)
+        #print(temp.get_shape()) # (128, 45, 2)
 
         A = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v) / tf.expand_dims((tf.reduce_sum(Y_v, axis=[1]) +10**-20), axis=2) # [128,2,45],/ [128, 2, 1].
 
         M = tf.nn.relu(tf.reduce_sum(tf.matmul(A, tf.transpose(embeddings_v, [0, 2, 1])), axis=1))
 
-        loss = tf.reduce_mean(tf.square(S[0] - mixed * M), keepdims=True)
-        return loss / self.batch_size / self.windows_per_sample
+        loss = tf.reduce_mean(tf.square(S[0] - mixed * M + tf.square(S[1] - mixed * M), keepdims=True)
+        return loss
 
     def train(self, loss, lr):
         '''Optimizer'''
