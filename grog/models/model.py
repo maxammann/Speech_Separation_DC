@@ -115,16 +115,20 @@ class Model(object):
         Y_v = tf.reshape(
             Y_rsv, shape=[-1, self.windows_per_sample * self.ft_bins, 2])
 
-        V_representation = tf.reshape(embeddings_v, [-1, self.embedding_dimension]) # output of network [FT, K]
-        S = in_data * tf.reshape(Y_rsv, shape=[-1, self.ft_bins, 2]) # S [-1, ft_bins, 2]
-        mixed = in_data # X [-1, ft_bins]
+       
+        mixed = tf.reshape(in_data, shape=[-1, self.windows_per_sample * self.ft_bins]) # X 
+        S =  mixed * tf.transpose(Y_v, [2, 0, 1]) # S 
 
-        A = tf.reduce_sum(V_representation * tf.expand_dims(Y_v, 3), axis=[1, 2]) / (tf.expand_dims(tf.reduce_sum(Y_v, axis=[1, 2]), axis=1)+10**-20)
-        A = tf.expand_dims(tf.expand_dims(A, axis=1), axis=1)
+        temp = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v)
+        print(temp.get_shape()) # (128, 45, 2)
+        print(tf.reduce_sum(temp, axis=[0]).get_shape()) # (45, 2)
+        print(tf.reduce_sum(Y_v, axis=[2]).get_shape()) # (2,)
 
-        M = tf.nn.relu(tf.reduce_sum(A * V_representation, axis=3))
+        A = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v) / tf.expand_dims((tf.reduce_sum(Y_v, axis=[1]) +10**-20), axis=2) # [128,2,45],/ [128, 2, 1].
 
-        loss = tf.reduce_mean(tf.square(S - mixed * M), keepdims=True)
+        M = tf.nn.relu(tf.reduce_sum(tf.matmul(A, tf.transpose(embeddings_v, [0, 2, 1])), axis=1))
+
+        loss = tf.reduce_mean(tf.square(S[0] - mixed * M), keepdims=True)
         return loss / self.batch_size / self.windows_per_sample
 
     def train(self, loss, lr):
