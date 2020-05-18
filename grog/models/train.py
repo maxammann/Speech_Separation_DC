@@ -55,7 +55,7 @@ def train(model_dir, sum_dir, train_pkl, val_pkl, config):
         VAD_data_reshaped = tf.reshape(VAD_data, [-1, ft_bins])
         # compute the loss
         loss = BiModel.loss_attractor(in_data_reshaped, embedding, Y_data_reshaped, VAD_data_reshaped)
-        train_loss_summary_op = tf.summary.scalar('train_loss', loss)
+        train_loss_summary_op = tf.summary.scalar('train_loss', tf.squeeze(loss))
         # get the train operation
         train_op = BiModel.train(loss, learning_rate)
         saver = tf.train.Saver(tf.global_variables())
