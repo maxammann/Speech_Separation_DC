@@ -100,6 +100,33 @@ class Model(object):
         loss_v = (loss_batch) / self.batch_size / self.windows_per_sample
         return loss_v
 
+    def loss_attractor(self, in_data, embeddings, Y, VAD):
+        embeddings_rs = tf.reshape(
+            embeddings, shape=[-1, self.embedding_dimension]) # Was: [-1, self.ft_bins, self.embedding_dimension]
+        VAD_rs = tf.reshape(VAD, shape=[-1])
+        # get the embeddings with active VAD
+        embeddings_rsv = tf.transpose(tf.multiply(
+            tf.transpose(embeddings_rs), VAD_rs))
+        embeddings_v = tf.reshape(
+            embeddings_rsv, [-1, self.windows_per_sample * self.ft_bins, self.embedding_dimension])
+        # get the Y(speaker indicator function) with active VAD
+        Y_rs = tf.reshape(Y, shape=[-1, 2])
+        Y_rsv = tf.transpose(tf.multiply(tf.transpose(Y_rs), VAD_rs))
+        Y_v = tf.reshape(
+            Y_rsv, shape=[-1, self.windows_per_sample * self.ft_bins, 2])
+
+        V_representation = tf.reshape(embeddings_v, [-1, self.embedding_dimension]) # output of network [FT, K]
+        S = in_data * tf.reshape(Y_rsv, shape=[-1, self.ft_bins, 2]) # S [-1, ft_bins, 2]
+        mixed = in_data # X [-1, ft_bins]
+
+        A = tf.reduce_sum(V_representation * tf.expand_dims(Y_v, 3), axis=[1, 2]) / (tf.expand_dims(tf.reduce_sum(Y_v, axis=[1, 2]), axis=1)+10**-20)
+        A = tf.expand_dims(tf.expand_dims(A, axis=1), axis=1)
+
+        M = tf.nn.relu(tf.reduce_sum(A * V_representation, axis=3))
+
+        loss = tf.reduce_mean(tf.square(S - mixed * M), keepdims=True)
+        return loss / self.batch_size / self.windows_per_sample
+
     def train(self, loss, lr):
         '''Optimizer'''
         optimizer = tf.train.AdamOptimizer(

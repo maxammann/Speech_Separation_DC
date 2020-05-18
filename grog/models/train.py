@@ -50,10 +50,11 @@ def train(model_dir, sum_dir, train_pkl, val_pkl, config):
         BiModel = Model(n_layers, embedding_dimension, windows_per_sample, config.window_size, n_hidden, batch_size, dropout_ff, dropout_rc)
         # build the net structure
         embedding = BiModel.inference(in_data)
+        in_data_reshaped = tf.reshape(in_data, [-1, ft_bins])
         Y_data_reshaped = tf.reshape(Y_data, [-1, ft_bins, 2])
         VAD_data_reshaped = tf.reshape(VAD_data, [-1, ft_bins])
         # compute the loss
-        loss = BiModel.loss(embedding, Y_data_reshaped, VAD_data_reshaped)
+        loss = BiModel.loss_attractor(in_data_reshaped, embedding, Y_data_reshaped, VAD_data_reshaped)
         train_loss_summary_op = tf.summary.scalar('train_loss', loss)
         # get the train operation
         train_op = BiModel.train(loss, learning_rate)
