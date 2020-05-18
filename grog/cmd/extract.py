@@ -38,7 +38,10 @@ if __name__ == "__main__":
     print(len(mixes))
 
     for i, mix in enumerate(mixes):
-        librosa.output.write_wav(os.path.join(output, "%dmix.wav") % i, mix, config.sampling_rate)
-        librosa.output.write_wav(os.path.join(output, "%dsource1.wav") % i, sources[i][0], config.sampling_rate)
-        librosa.output.write_wav(os.path.join(output, "%02dsource2.wav") % i, sources[i][1], config.sampling_rate)
-    
+        print(labels[i])
+        label = "%s-%s" % (labels[i][0], labels[i][1])
+        librosa.output.write_wav(os.path.join(output, "%s_mix.wav") % label, mix, config.sampling_rate)
+        librosa.output.write_wav(os.path.join(output, "%s_ref1.wav") % label, reference[i][0], config.sampling_rate)
+        librosa.output.write_wav(os.path.join(output, "%s_ref2.wav") % label, reference[i][1], config.sampling_rate)
+        librosa.output.write_wav(os.path.join(output, "%s_source1.wav") % label, sources[i][0], config.sampling_rate)
+        librosa.output.write_wav(os.path.join(output, "%s_source2.wav") % label, sources[i][1], config.sampling_rate)

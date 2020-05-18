@@ -27,5 +27,5 @@ See final presentation [here](https://maxammann.github.io/speech-separation-pres
 
 # Evaluating
 
-* `python3 -m grog.cmd.eval --config /fast/maxammann/config.json --eval_data_path /rzhome/ammannma/eval/ --eval_pack_path /rzhome/ammannma/eval.pkl --model_dir /fast/maxammann/models/voxceleb/  --output /rzhome/ammannma/eval/eval_result.pkl`
+* `python3 -m grog.cmd.eval --config /fast/maxammann/config.json --eval_data_path /rzhome/ammannma/test-clip --eval_pack_path /fast/maxammann/eval_pack.pkl --model_dir /fast/maxammann/11_04/models/voxceleb  --output /fast/maxammann/eval_result.pkl`
 * `python3 -m grog.cmd.extract --config /fast/maxammann/config.json --eval_result /rzhome/ammannma/eval/eval_result.pkl --output /rzhome/ammannma/eval/eval_result/`

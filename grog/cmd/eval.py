@@ -12,6 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--eval_pack_path", type=str, help="The pack cache", required=True)
     parser.add_argument("-m", "--model_dir", type=str, help="the directory where the trained model is stored", required=True)
     parser.add_argument("-o", "--output", type=str, help="the directory where the estimated sources should be stored", required=True)
+    parser.add_argument("-n", "--num", type=int, help="the amount of samples to generate", default=100)
     parser.add_argument("--config", type=str, help="the config", required=False)
     args = parser.parse_args()
 
@@ -36,7 +37,7 @@ if __name__ == "__main__":
         generated_mixtures = generate_mixtures(sample_dir, config.sampling_rate, n)
         return generated_mixtures
 
-    n = 100
+    n = args.num
 
     voxceleb = generate_eval_data(
         n, 
