@@ -116,18 +116,22 @@ class Model(object):
             Y_rsv, shape=[-1, self.windows_per_sample * self.ft_bins, 2])
 
         mixed = tf.reshape(in_data, shape=[-1, self.windows_per_sample * self.ft_bins]) # X 
-        S =  mixed * tf.transpose(Y_v, [2, 0, 1]) # S 
+        S = mixed * tf.transpose(Y_v, [2, 0, 1]) # S 
 
-        #temp = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v)
-        #print(temp.get_shape()) # (128, 45, 2)
+        print("mixed: " + str(mixed.get_shape()))
+        print("S: " + str(S.get_shape()))
 
         A = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v) / tf.expand_dims((tf.reduce_sum(Y_v, axis=[1]) +10**-20), axis=2) # [128,2,45],/ [128, 2, 1].
 
+        print("A: " + str(A.get_shape()))
+
         M = tf.nn.relu(tf.reduce_sum(tf.matmul(A, tf.transpose(embeddings_v, [0, 2, 1])), axis=1))
+
+        print("M: " + str(M.get_shape()))
 
         ref1 = tf.reshape(in_ref1_data, shape=[-1, self.windows_per_sample * self.ft_bins])
         ref2 = tf.reshape(in_ref2_data, shape=[-1, self.windows_per_sample * self.ft_bins])
-        loss = tf.reduce_mean(tf.square(ref1 - mixed * M[0]) + tf.square(ref2 - mixed * M[1]), keepdims=True)
+        loss = tf.reduce_mean(tf.square(ref1 - mixed * M) + tf.square(ref2 - (mixed - (mixed * M))), keepdims=True)
         return loss
 
     def train(self, loss, lr):
