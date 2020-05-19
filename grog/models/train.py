@@ -44,6 +44,8 @@ def train(model_dir, sum_dir, train_pkl, val_pkl, config):
         # placeholder for input log spectrum, VAD info.,
         # and speaker indicator function
         in_data = tf.placeholder(tf.float32, shape=[batch_size, windows_per_sample, ft_bins])
+        in_ref1_data = tf.placeholder(tf.float32, shape=[batch_size, windows_per_sample, ft_bins])
+        in_ref2_data = tf.placeholder(tf.float32, shape=[batch_size, windows_per_sample, ft_bins])
         VAD_data = tf.placeholder(tf.float32, shape=[batch_size, windows_per_sample, ft_bins])
         Y_data = tf.placeholder(tf.float32, shape=[batch_size, windows_per_sample, ft_bins, 2])
         # init the model
@@ -51,10 +53,12 @@ def train(model_dir, sum_dir, train_pkl, val_pkl, config):
         # build the net structure
         embedding = BiModel.inference(in_data)
         in_data_reshaped = tf.reshape(in_data, [-1, ft_bins])
+        in_ref1_data_reshaped = tf.reshape(in_ref1_data, [-1, ft_bins])
+        in_ref2_data_reshaped = tf.reshape(in_ref2_data, [-1, ft_bins])
         Y_data_reshaped = tf.reshape(Y_data, [-1, ft_bins, 2])
         VAD_data_reshaped = tf.reshape(VAD_data, [-1, ft_bins])
         # compute the loss
-        loss = BiModel.loss_attractor(in_data_reshaped, embedding, Y_data_reshaped, VAD_data_reshaped)
+        loss = BiModel.loss_attractor(in_data_reshaped, in_ref1_data_reshaped, in_ref2_data_reshaped, embedding, Y_data_reshaped, VAD_data_reshaped)
         train_loss_summary_op = tf.summary.scalar('train_loss', tf.squeeze(loss))
         # get the train operation
         train_op = BiModel.train(loss, learning_rate)
@@ -85,11 +89,13 @@ def train(model_dir, sum_dir, train_pkl, val_pkl, config):
 
         for step in range(init_step, init_step + max_steps):
             start_time = time.time()
-            in_data_np, Y_data_np, VAD_data_np = data_generator.gen_tf_batch()
+            in_data_np, in_ref1_data_np, in_ref2_data_np, Y_data_np, VAD_data_np = data_generator.gen_tf_batch()
             # train the model
             loss_value, _, summary_str = sess.run(
                 [loss, train_op, train_loss_summary_op],
                 feed_dict={in_data: in_data_np,
+                           in_ref1_data: in_ref1_data_np,
+                           in_ref2_data: in_ref2_data_np,
                            VAD_data: VAD_data_np,
                            Y_data: Y_data_np,
                            dropout_ff: train_dropout_ff,
@@ -127,10 +133,12 @@ def train(model_dir, sum_dir, train_pkl, val_pkl, config):
                 val_epoch = val_generator.epoch
                 losses = []
                 while(val_epoch == val_generator.epoch):
-                    in_data_np, Y_data_np, VAD_data_np = val_generator.gen_tf_batch()
+                    in_data_np, in_ref1_data_np, in_ref2_data_np, Y_data_np, VAD_data_np = val_generator.gen_tf_batch()
                     loss_value = sess.run(
                         loss,
                         feed_dict={in_data: in_data_np,
+                                   in_ref1_data: in_ref1_data_np,
+                                   in_ref2_data: in_ref2_data_np,
                                    VAD_data: VAD_data_np,
                                    Y_data: Y_data_np,
                                    dropout_ff: 0,

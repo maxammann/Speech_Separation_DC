@@ -149,7 +149,10 @@ class PackData(object):
             VAD = speech_VAD[from_index:to_index, :].astype('bool')
 
             self.samples_counter += ((windows_per_sample - 1) * hop_length) + window_size
-            samples.append({'Sample': sample_mix,
+            samples.append({
+                            'SampleRef1': sample_1,
+                            'SampleRef2': sample_2,
+                            'Sample': sample_mix,
             #                'Phase': mix_phase,
                             'VAD': VAD,
                             'Target': Y})

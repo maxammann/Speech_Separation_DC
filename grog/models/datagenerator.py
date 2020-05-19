@@ -49,6 +49,16 @@ class DataGenerator(object):
             [np.reshape(item['Sample'], [1, self.windows_per_sample, self.ft_bins])
              for item in data_batch]
         )
+
+        in_ref1_data_np = np.concatenate(
+            [np.reshape(item['SampleRef1'], [1, self.windows_per_sample, self.ft_bins])
+             for item in data_batch]
+        )
+        in_ref2_data_np = np.concatenate(
+            [np.reshape(item['SampleRef2'], [1, self.windows_per_sample, self.ft_bins])
+             for item in data_batch]
+        )
+
         VAD_data_np = np.concatenate(
             [np.reshape(item['VAD'], [1, self.windows_per_sample, self.ft_bins])
              for item in data_batch]
@@ -59,4 +69,4 @@ class DataGenerator(object):
              for item in data_batch]
         )
         Y_data_np = Y_data_np.astype('int')
-        return in_data_np, Y_data_np, VAD_data_np
+        return in_data_np, in_ref1_data_np, in_ref2_data_np, Y_data_np, VAD_data_np

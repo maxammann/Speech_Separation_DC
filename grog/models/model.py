@@ -100,7 +100,7 @@ class Model(object):
         loss_v = (loss_batch) / self.batch_size / self.windows_per_sample
         return loss_v
 
-    def loss_attractor(self, in_data, embeddings, Y, VAD):
+    def loss_attractor(self, in_data, in_ref1_data, in_ref2_data, embeddings, Y, VAD):
         embeddings_rs = tf.reshape(
             embeddings, shape=[-1, self.embedding_dimension]) # Was: [-1, self.ft_bins, self.embedding_dimension]
         VAD_rs = tf.reshape(VAD, shape=[-1])
@@ -125,7 +125,9 @@ class Model(object):
 
         M = tf.nn.relu(tf.reduce_sum(tf.matmul(A, tf.transpose(embeddings_v, [0, 2, 1])), axis=1))
 
-        loss = tf.reduce_mean(tf.square(S[0] - mixed * M + tf.square(S[1] - mixed * M), keepdims=True)
+        ref1 = tf.reshape(in_ref1_data, shape=[-1, self.windows_per_sample * self.ft_bins])
+        ref2 = tf.reshape(in_ref2_data, shape=[-1, self.windows_per_sample * self.ft_bins])
+        loss = tf.reduce_mean(tf.square(ref1 - mixed * M[0]) + tf.square(ref2 - mixed * M[1]), keepdims=True)
         return loss
 
     def train(self, loss, lr):
