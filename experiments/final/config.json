@@ -12,6 +12,6 @@
     "train_dropout_rc": 0.2,
     "window_size": 256,
     "windows_per_sample": 100,
-    "dataset_mean": -43.115990,
-    "dataset_std": 15.164207 
+    "dataset_mean": null,
+    "dataset_std": null
 }

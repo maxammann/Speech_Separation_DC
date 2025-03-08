@@ -119,11 +119,11 @@ class Model(object):
 
         print("mixed: " + str(mixed.get_shape())) # [128,12900]
 
-        A = tf.matmul(tf.transpose(Y_v, [0, 2, 1]), embeddings_v) / tf.expand_dims((tf.reduce_sum(Y_v, axis=[1]) + 10**-20), axis=2) # [128,2,45],/ [128, 2, 1].
+        A = tf.matmul(tf.transpose(embeddings_v, [0, 2, 1]), Y_v) / tf.expand_dims((tf.reduce_sum(Y_v, axis=[1]) + 10**-20), axis=1) # [128,45, 2] / [128, 1, 2].
 
         print("A: " + str(A.get_shape())) # (128, 2, 45)
 
-        M = tf.nn.sigmoid(tf.matmul(A, tf.transpose(embeddings_v, [0, 2, 1]))) # (128, 2, 12900)
+        M = tf.nn.sigmoid(tf.matmul(A, tf.transpose(embeddings_v, [0, 1, 2]))) # (128, 2, 12900)
 
         print("M: " + str(M.get_shape())) # (128, 2, 12900)
 
